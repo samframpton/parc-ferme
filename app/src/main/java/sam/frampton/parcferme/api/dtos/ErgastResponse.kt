@@ -1,4 +1,4 @@
-package sam.frampton.parcferme.api
+package sam.frampton.parcferme.api.dtos
 
 import com.google.gson.annotations.SerializedName
 

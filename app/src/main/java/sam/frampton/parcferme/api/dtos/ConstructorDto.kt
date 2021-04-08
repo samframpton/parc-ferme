@@ -1,4 +1,4 @@
-package sam.frampton.parcferme.api
+package sam.frampton.parcferme.api.dtos
 
 data class ConstructorDto(
     val constructorId: String,
