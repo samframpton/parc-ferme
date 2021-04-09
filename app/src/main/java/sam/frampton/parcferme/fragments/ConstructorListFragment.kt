@@ -4,57 +4,76 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import sam.frampton.parcferme.R
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import sam.frampton.parcferme.adapters.ConstructorAdapter
+import sam.frampton.parcferme.data.Constructor
+import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
+import sam.frampton.parcferme.viewmodels.ConstructorListViewModel
+import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ConstructorListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ConstructorListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val seasonViewModel: SeasonViewModel by activityViewModels()
+    private val constructorListViewModel: ConstructorListViewModel by viewModels()
+    private lateinit var binding: FragmentConstructorListBinding
+    private lateinit var constructorAdapter: ConstructorAdapter
+    private var constructorList: LiveData<List<Constructor>>? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_constructor_list, container, false)
+    ): View {
+        binding = FragmentConstructorListBinding.inflate(layoutInflater)
+        initialiseRecyclerView()
+        initialiseSpinner()
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ConstructorListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ConstructorListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun initialiseRecyclerView() {
+        constructorAdapter = ConstructorAdapter {
+            TODO()
+        }
+        binding.rvConstructorListConstructors.adapter = constructorAdapter
+    }
+
+    private fun initialiseSpinner() {
+        val seasonList = ArrayList<Int>()
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, seasonList)
+        binding.spConstructorListSeason.adapter = spinnerAdapter
+        binding.spConstructorListSeason.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val season = parent.getItemAtPosition(position) as Int
+                    constructorList?.removeObservers(viewLifecycleOwner)
+                    constructorList = constructorListViewModel.getConstructors(season)
+                    constructorList?.observe(viewLifecycleOwner) {
+                        constructorAdapter.submitList(it)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
                 }
             }
+
+        seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
+            if (seasons.isNotEmpty()) {
+                seasonList.clear()
+                seasonList.addAll(seasons)
+                spinnerAdapter.notifyDataSetChanged()
+            }
+        }
     }
 }
