@@ -1,60 +1,77 @@
 package sam.frampton.parcferme.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import sam.frampton.parcferme.R
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import sam.frampton.parcferme.adapters.RaceAdapter
+import sam.frampton.parcferme.data.Race
+import sam.frampton.parcferme.databinding.FragmentRaceListBinding
+import sam.frampton.parcferme.viewmodels.RaceListViewModel
+import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RaceListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RaceListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val seasonViewModel: SeasonViewModel by activityViewModels()
+    private val raceListViewModel: RaceListViewModel by viewModels()
+    private lateinit var binding: FragmentRaceListBinding
+    private lateinit var raceAdapter: RaceAdapter
+    private var raceList: LiveData<List<Race>>? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_race_list, container, false)
+    ): View {
+        binding = FragmentRaceListBinding.inflate(layoutInflater)
+        initialiseRecyclerView()
+        initialiseSpinner()
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RaceListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RaceListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun initialiseRecyclerView() {
+        raceAdapter = RaceAdapter {
+            TODO()
+        }
+        binding.rvRaceListRaces.adapter = raceAdapter
+    }
+
+    private fun initialiseSpinner() {
+        val seasonList = ArrayList<Int>()
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, seasonList)
+        binding.spRaceListSeason.adapter = spinnerAdapter
+        binding.spRaceListSeason.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val season = parent.getItemAtPosition(position) as Int
+                    raceList?.removeObservers(viewLifecycleOwner)
+                    raceList = raceListViewModel.getRaces(season)
+                    raceList?.observe(viewLifecycleOwner) { raceAdapter.submitList(it) }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
                 }
             }
+
+        seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
+            if (seasons.isNotEmpty()) {
+                seasonList.clear()
+                seasonList.addAll(seasons)
+                spinnerAdapter.notifyDataSetChanged()
+            }
+        }
     }
 }
