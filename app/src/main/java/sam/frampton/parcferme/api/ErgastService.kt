@@ -13,7 +13,7 @@ interface ErgastService {
     companion object {
         private const val BASE_URL = "https://ergast.com/api/"
         private const val DEFAULT_LIMIT = 100
-        private val instance: ErgastService =
+        val instance: ErgastService =
             Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

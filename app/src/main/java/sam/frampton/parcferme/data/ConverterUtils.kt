@@ -98,24 +98,21 @@ fun List<QualifyingResultDto>.toQualifyingResultList(): List<QualifyingResult> =
     )
 }
 
-fun List<DriverStandingDto>.toDriverStandingList(season: Int): List<DriverStanding> = map {
+fun DriverStandingDto.toDriverStanding(season: Int): DriverStanding =
     DriverStanding(
-        it.position,
-        it.points,
-        it.wins,
-        it.driver.toDriver(),
-        it.constructors.toConstructorList(),
+        position,
+        points,
+        wins,
+        driver.toDriver(),
+        constructors.toConstructorList(),
         season
     )
-}
 
-fun List<ConstructorStandingDto>.toConstructorStandingList(season: Int): List<ConstructorStanding> =
-    map {
-        ConstructorStanding(
-            it.position,
-            it.points,
-            it.wins,
-            it.constructor.toConstructor(),
-            season
-        )
-    }
+fun ConstructorStandingDto.toConstructorStanding(season: Int): ConstructorStanding =
+    ConstructorStanding(
+        position,
+        points,
+        wins,
+        constructor.toConstructor(),
+        season
+    )
