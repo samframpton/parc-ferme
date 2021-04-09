@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/driverListFragment">
+
+    <fragment
+        android:id="@+id/driverListFragment"
+        android:name="sam.frampton.parcferme.fragments.DriverListFragment"
+        android:label="fragment_driver_list"
+        tools:layout="@layout/fragment_driver_list" />
+    <fragment
+        android:id="@+id/constructorListFragment"
+        android:name="sam.frampton.parcferme.fragments.ConstructorListFragment"
+        android:label="fragment_constructor_list"
+        tools:layout="@layout/fragment_constructor_list" />
+    <fragment
+        android:id="@+id/raceListFragment"
+        android:name="sam.frampton.parcferme.fragments.RaceListFragment"
+        android:label="fragment_race_list"
+        tools:layout="@layout/fragment_race_list" />
+    <fragment
+        android:id="@+id/standingListFragment"
+        android:name="sam.frampton.parcferme.fragments.StandingListFragment"
+        android:label="fragment_standing_list"
+        tools:layout="@layout/fragment_standing_list" />
+</navigation>

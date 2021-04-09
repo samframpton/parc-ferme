@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/driverListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_driver"
+        android:title="@string/drivers" />
+    <item
+        android:id="@+id/constructorListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_constructor"
+        android:title="@string/constructors" />
+    <item
+        android:id="@+id/raceListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_race"
+        android:title="@string/races" />
+    <item
+        android:id="@+id/standingListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_standings"
+        android:title="@string/standings" />
+</menu>
