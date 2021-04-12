@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.ConstructorAdapter
 import sam.frampton.parcferme.data.Constructor
 import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
@@ -37,7 +38,9 @@ class ConstructorListFragment : Fragment() {
 
     private fun initialiseRecyclerView() {
         constructorAdapter = ConstructorAdapter {
-            TODO()
+            val directions = ConstructorListFragmentDirections
+                .actionConstructorListFragmentToConstructorDetailFragment(it)
+            findNavController().navigate(directions)
         }
         binding.rvConstructorListConstructors.adapter = constructorAdapter
     }

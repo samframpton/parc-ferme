@@ -18,7 +18,11 @@
         android:id="@+id/constructorListFragment"
         android:name="sam.frampton.parcferme.fragments.ConstructorListFragment"
         android:label="fragment_constructor_list"
-        tools:layout="@layout/fragment_constructor_list" />
+        tools:layout="@layout/fragment_constructor_list" >
+        <action
+            android:id="@+id/action_constructorListFragment_to_constructorDetailFragment"
+            app:destination="@id/constructorDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/raceListFragment"
         android:name="sam.frampton.parcferme.fragments.RaceListFragment"
@@ -37,5 +41,14 @@
         <argument
             android:name="driver"
             app:argType="sam.frampton.parcferme.data.Driver" />
+    </fragment>
+    <fragment
+        android:id="@+id/constructorDetailFragment"
+        android:name="sam.frampton.parcferme.fragments.ConstructorDetailFragment"
+        android:label="fragment_constructor_detail"
+        tools:layout="@layout/fragment_constructor_detail" >
+        <argument
+            android:name="constructor"
+            app:argType="sam.frampton.parcferme.data.Constructor" />
     </fragment>
 </navigation>
