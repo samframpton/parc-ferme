@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">Parc Ferme</string>
+
     <string name="drivers">Drivers</string>
     <string name="constructors">Constructors</string>
     <string name="races">Races</string>
     <string name="standings">Standings</string>
+
+    <string-array name="standing_type">
+        <item>Drivers</item>
+        <item>Constructors</item>
+    </string-array>
 </resources>
