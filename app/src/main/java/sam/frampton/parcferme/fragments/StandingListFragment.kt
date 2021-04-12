@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
 import sam.frampton.parcferme.adapters.DriverStandingAdapter
 import sam.frampton.parcferme.data.ConstructorStanding
@@ -20,8 +22,11 @@ import sam.frampton.parcferme.viewmodels.StandingListViewModel
 
 class StandingListFragment : Fragment() {
 
+    enum class StandingType { DRIVER, CONSTRUCTOR }
+
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val standingListViewModel: StandingListViewModel by viewModels()
+    private val args: StandingListFragmentArgs by navArgs()
     private lateinit var binding: FragmentStandingListBinding
     private lateinit var driverAdapter: DriverStandingAdapter
     private lateinit var constructorAdapter: ConstructorStandingAdapter
@@ -42,12 +47,26 @@ class StandingListFragment : Fragment() {
 
     private fun initialiseRecyclerView() {
         driverAdapter = DriverStandingAdapter {
-            TODO()
+            val directions = StandingListFragmentDirections
+                .actionStandingListFragmentToDriverDetailFragment(it.driver)
+            findNavController().navigate(directions)
         }
         constructorAdapter = ConstructorStandingAdapter {
-            TODO()
+            val directions = StandingListFragmentDirections
+                .actionStandingListFragmentToConstructorDetailFragment(it.constructor)
+            findNavController().navigate(directions)
         }
-        binding.rvStandingListStandings.adapter = driverAdapter
+        binding.rvStandingListStandings.adapter =
+            when (args.standingType) {
+                StandingType.DRIVER -> {
+                    binding.spStandingListType.setSelection(0)
+                    driverAdapter
+                }
+                StandingType.CONSTRUCTOR -> {
+                    binding.spStandingListType.setSelection(1)
+                    constructorAdapter
+                }
+            }
     }
 
     private fun initialiseSeasonSpinner() {
@@ -85,6 +104,9 @@ class StandingListFragment : Fragment() {
             if (seasons.isNotEmpty()) {
                 seasonList.clear()
                 seasonList.addAll(seasons)
+                if (seasonList.contains(args.season)) {
+                    binding.spStandingListSeason.setSelection(seasons.indexOf(args.season))
+                }
                 spinnerAdapter.notifyDataSetChanged()
             }
         }

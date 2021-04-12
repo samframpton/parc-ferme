@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.DriverDetailStandingAdapter
 import sam.frampton.parcferme.databinding.FragmentDriverDetailBinding
@@ -23,7 +24,12 @@ class DriverDetailFragment : Fragment() {
         val binding = FragmentDriverDetailBinding.inflate(layoutInflater)
         binding.driver = args.driver
         val adapter = DriverDetailStandingAdapter {
-            TODO()
+            val action =
+                DriverDetailFragmentDirections.actionDriverDetailFragmentToStandingListFragment(
+                    StandingListFragment.StandingType.DRIVER,
+                    it.season
+                )
+            findNavController().navigate(action)
         }
         binding.rvDriverDetailStandings.adapter = adapter
         driverDetailViewModel.getDriverStandings(args.driver.driverId).observe(viewLifecycleOwner) {

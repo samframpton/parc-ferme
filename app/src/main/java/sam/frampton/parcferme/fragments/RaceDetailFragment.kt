@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.QualifyingResultAdapter
 import sam.frampton.parcferme.adapters.RaceResultAdapter
@@ -40,10 +41,14 @@ class RaceDetailFragment : Fragment() {
 
     private fun initialiseRecyclerView() {
         raceResultAdapter = RaceResultAdapter {
-            TODO()
+            val action = RaceDetailFragmentDirections
+                .actionRaceDetailFragmentToDriverDetailFragment(it.driver)
+            findNavController().navigate(action)
         }
         qualifyingResultAdapter = QualifyingResultAdapter {
-            TODO()
+            val action = RaceDetailFragmentDirections
+                .actionRaceDetailFragmentToDriverDetailFragment(it.driver)
+            findNavController().navigate(action)
         }
         binding.rvRaceDetailResults.adapter = raceResultAdapter
     }
