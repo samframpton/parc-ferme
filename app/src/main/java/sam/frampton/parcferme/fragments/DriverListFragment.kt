@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.DriverAdapter
 import sam.frampton.parcferme.data.Driver
 import sam.frampton.parcferme.databinding.FragmentDriverListBinding
@@ -37,7 +38,9 @@ class DriverListFragment : Fragment() {
 
     private fun initialiseRecyclerView() {
         driverAdapter = DriverAdapter {
-            TODO()
+            val directions =
+                DriverListFragmentDirections.actionDriverListFragmentToDriverDetailFragment(it)
+            findNavController().navigate(directions)
         }
         binding.rvDriverListDrivers.adapter = driverAdapter
     }

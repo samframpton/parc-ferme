@@ -9,7 +9,11 @@
         android:id="@+id/driverListFragment"
         android:name="sam.frampton.parcferme.fragments.DriverListFragment"
         android:label="fragment_driver_list"
-        tools:layout="@layout/fragment_driver_list" />
+        tools:layout="@layout/fragment_driver_list" >
+        <action
+            android:id="@+id/action_driverListFragment_to_driverDetailFragment"
+            app:destination="@id/driverDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/constructorListFragment"
         android:name="sam.frampton.parcferme.fragments.ConstructorListFragment"
@@ -25,4 +29,13 @@
         android:name="sam.frampton.parcferme.fragments.StandingListFragment"
         android:label="fragment_standing_list"
         tools:layout="@layout/fragment_standing_list" />
+    <fragment
+        android:id="@+id/driverDetailFragment"
+        android:name="sam.frampton.parcferme.fragments.DriverDetailFragment"
+        android:label="fragment_driver_detail"
+        tools:layout="@layout/fragment_driver_detail" >
+        <argument
+            android:name="driver"
+            app:argType="sam.frampton.parcferme.data.Driver" />
+    </fragment>
 </navigation>
