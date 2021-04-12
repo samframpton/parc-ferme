@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import sam.frampton.parcferme.data.DriverStanding
-import sam.frampton.parcferme.databinding.ListItemDriverSeasonStandingBinding
+import sam.frampton.parcferme.databinding.ListItemDriverStandingBinding
 
-class DriverSeasonStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
-    ListAdapter<DriverStanding, DriverSeasonStandingAdapter.ViewHolder>(DiffCallback) {
+class DriverStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
+    ListAdapter<DriverStanding, DriverStandingAdapter.ViewHolder>(DiffCallback) {
 
     inner class ViewHolder(
-        private val binding: ListItemDriverSeasonStandingBinding) :
+        private val binding: ListItemDriverStandingBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var driverStanding: DriverStanding? = null
 
@@ -38,7 +38,7 @@ class DriverSeasonStandingAdapter(private val onClick: (DriverStanding) -> Unit)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ListItemDriverSeasonStandingBinding.inflate(LayoutInflater.from(parent.context))
+            ListItemDriverStandingBinding.inflate(LayoutInflater.from(parent.context))
         return ViewHolder(binding)
     }
 

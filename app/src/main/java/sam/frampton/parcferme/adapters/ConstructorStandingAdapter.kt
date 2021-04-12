@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import sam.frampton.parcferme.data.ConstructorStanding
-import sam.frampton.parcferme.databinding.ListItemConstructorSeasonStandingBinding
+import sam.frampton.parcferme.databinding.ListItemConstructorStandingBinding
 
-class ConstructorSeasonStandingAdapter(private val onClick: (ConstructorStanding) -> Unit) :
-    ListAdapter<ConstructorStanding, ConstructorSeasonStandingAdapter.ViewHolder>(DiffCallback) {
+class ConstructorStandingAdapter(private val onClick: (ConstructorStanding) -> Unit) :
+    ListAdapter<ConstructorStanding, ConstructorStandingAdapter.ViewHolder>(DiffCallback) {
 
-    inner class ViewHolder(private val binding: ListItemConstructorSeasonStandingBinding) :
+    inner class ViewHolder(private val binding: ListItemConstructorStandingBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var constructorStanding: ConstructorStanding? = null
 
@@ -43,7 +43,7 @@ class ConstructorSeasonStandingAdapter(private val onClick: (ConstructorStanding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ListItemConstructorSeasonStandingBinding.inflate(LayoutInflater.from(parent.context))
+            ListItemConstructorStandingBinding.inflate(LayoutInflater.from(parent.context))
         return ViewHolder(binding)
     }
 

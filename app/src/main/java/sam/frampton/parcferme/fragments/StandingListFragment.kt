@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
-import sam.frampton.parcferme.adapters.ConstructorSeasonStandingAdapter
-import sam.frampton.parcferme.adapters.DriverSeasonStandingAdapter
+import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
+import sam.frampton.parcferme.adapters.DriverStandingAdapter
 import sam.frampton.parcferme.data.ConstructorStanding
 import sam.frampton.parcferme.data.DriverStanding
 import sam.frampton.parcferme.databinding.FragmentStandingListBinding
@@ -23,8 +23,8 @@ class StandingListFragment : Fragment() {
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val standingListViewModel: StandingListViewModel by viewModels()
     private lateinit var binding: FragmentStandingListBinding
-    private lateinit var driverAdapter: DriverSeasonStandingAdapter
-    private lateinit var constructorAdapter: ConstructorSeasonStandingAdapter
+    private lateinit var driverAdapter: DriverStandingAdapter
+    private lateinit var constructorAdapter: ConstructorStandingAdapter
     private var driverStandingList: LiveData<List<DriverStanding>>? = null
     private var constructorStandingList: LiveData<List<ConstructorStanding>>? = null
 
@@ -41,10 +41,10 @@ class StandingListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        driverAdapter = DriverSeasonStandingAdapter {
+        driverAdapter = DriverStandingAdapter {
             TODO()
         }
-        constructorAdapter = ConstructorSeasonStandingAdapter {
+        constructorAdapter = ConstructorStandingAdapter {
             TODO()
         }
         binding.rvStandingListStandings.adapter = driverAdapter
