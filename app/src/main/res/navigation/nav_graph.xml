@@ -27,7 +27,11 @@
         android:id="@+id/raceListFragment"
         android:name="sam.frampton.parcferme.fragments.RaceListFragment"
         android:label="fragment_race_list"
-        tools:layout="@layout/fragment_race_list" />
+        tools:layout="@layout/fragment_race_list" >
+        <action
+            android:id="@+id/action_raceListFragment_to_raceDetailFragment"
+            app:destination="@id/raceDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/standingListFragment"
         android:name="sam.frampton.parcferme.fragments.StandingListFragment"
@@ -50,5 +54,14 @@
         <argument
             android:name="constructor"
             app:argType="sam.frampton.parcferme.data.Constructor" />
+    </fragment>
+    <fragment
+        android:id="@+id/raceDetailFragment"
+        android:name="sam.frampton.parcferme.fragments.RaceDetailFragment"
+        android:label="fragment_race_detail"
+        tools:layout="@layout/fragment_race_detail" >
+        <argument
+            android:name="race"
+            app:argType="sam.frampton.parcferme.data.Race" />
     </fragment>
 </navigation>

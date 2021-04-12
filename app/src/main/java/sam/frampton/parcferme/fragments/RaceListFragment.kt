@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.RaceAdapter
 import sam.frampton.parcferme.data.Race
 import sam.frampton.parcferme.databinding.FragmentRaceListBinding
@@ -37,7 +38,9 @@ class RaceListFragment : Fragment() {
 
     private fun initialiseRecyclerView() {
         raceAdapter = RaceAdapter {
-            TODO()
+            val directions =
+                RaceListFragmentDirections.actionRaceListFragmentToRaceDetailFragment(it)
+            findNavController().navigate(directions)
         }
         binding.rvRaceListRaces.adapter = raceAdapter
     }

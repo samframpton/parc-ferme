@@ -6,6 +6,10 @@
     <string name="races">Races</string>
     <string name="standings">Standings</string>
 
+    <string-array name="result_type">
+        <item>Race</item>
+        <item>Qualifying</item>
+    </string-array>
     <string-array name="standing_type">
         <item>Drivers</item>
         <item>Constructors</item>
