@@ -13,7 +13,7 @@ import sam.frampton.parcferme.data.repositories.StandingRepository
 
 class StandingListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = StandingRepository()
+    private val repository = StandingRepository(application)
 
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>

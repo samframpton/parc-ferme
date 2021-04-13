@@ -1,25 +1,27 @@
 package sam.frampton.parcferme.data.repositories
 
+import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
+import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class ResultRepository() {
+class ResultRepository(context: Context) {
 
-    private val raceResultList = MutableLiveData<List<RaceResult>>(emptyList())
-    private val qualifyingResultList = MutableLiveData<List<QualifyingResult>>(emptyList())
+    private val resultDao = AppDatabase.getInstance(context).resultDao()
 
-    fun getRaceResults(season: Int, round: Int): LiveData<List<RaceResult>> {
-        return raceResultList
-    }
+    fun getRaceResults(season: Int, round: Int): LiveData<List<RaceResult>> =
+        Transformations.map(resultDao.getRaceResultsBySeasonRound(season, round)) {
+            it.toRaceResultList()
+        }
 
-    suspend fun refreshRaceResults(season: Int, round: Int): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshRaceResults(season: Int, round: Int): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.raceResults(season, round)
                 cacheApiRaceResults(apiResponse)
@@ -30,22 +32,26 @@ class ResultRepository() {
                 }
             }
         }
-    }
 
-    private fun cacheApiRaceResults(response: ErgastResponse): RefreshResult {
-        val raceResults =
-            response.motorRacingData.raceTable?.races?.firstOrNull()?.results?.toRaceResultList()
-                ?: return RefreshResult.OTHER_ERROR
-        raceResultList.postValue(raceResults)
-        return RefreshResult.SUCCESS
-    }
+    private fun cacheApiRaceResults(response: ErgastResponse): RefreshResult =
+        response.motorRacingData.raceTable?.races?.firstOrNull()?.let { race ->
+            race.results.forEach {
+                resultDao.insertRaceResult(
+                    it.toRaceResultEntity(race.season, race.round),
+                    it.driver.toDriverEntity(),
+                    it.constructor.toConstructorEntity()
+                )
+            }
+            RefreshResult.SUCCESS
+        } ?: RefreshResult.OTHER_ERROR
 
-    fun getQualifyingResults(season: Int, round: Int): LiveData<List<QualifyingResult>> {
-        return qualifyingResultList
-    }
+    fun getQualifyingResults(season: Int, round: Int): LiveData<List<QualifyingResult>> =
+        Transformations.map(resultDao.getQualifyingResultsBySeasonRound(season, round)) {
+            it.toQualifyingResultList()
+        }
 
-    suspend fun refreshQualifyingResults(season: Int, round: Int): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshQualifyingResults(season: Int, round: Int): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.qualifyingResults(season, round)
                 cacheApiQualifyingResults(apiResponse)
@@ -56,12 +62,16 @@ class ResultRepository() {
                 }
             }
         }
-    }
 
-    private fun cacheApiQualifyingResults(response: ErgastResponse): RefreshResult {
-        val qualifyingResults = response.motorRacingData.raceTable?.races?.firstOrNull()
-            ?.qualifyingResults?.toQualifyingResultList() ?: return RefreshResult.OTHER_ERROR
-        qualifyingResultList.postValue(qualifyingResults)
-        return RefreshResult.SUCCESS
-    }
+    private fun cacheApiQualifyingResults(response: ErgastResponse): RefreshResult =
+        response.motorRacingData.raceTable?.races?.firstOrNull()?.let { race ->
+            race.qualifyingResults.forEach {
+                resultDao.insertQualifyingResult(
+                    it.toQualifyingResultEntity(race.season, race.round),
+                    it.driver.toDriverEntity(),
+                    it.constructor.toConstructorEntity()
+                )
+            }
+            RefreshResult.SUCCESS
+        } ?: RefreshResult.OTHER_ERROR
 }

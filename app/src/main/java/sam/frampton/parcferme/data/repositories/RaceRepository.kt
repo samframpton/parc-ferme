@@ -2,26 +2,24 @@ package sam.frampton.parcferme.data.repositories
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
-import sam.frampton.parcferme.data.Race
-import sam.frampton.parcferme.data.RefreshResult
-import sam.frampton.parcferme.data.toRaceList
+import sam.frampton.parcferme.data.*
+import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
 class RaceRepository(val context: Context) {
 
-    private val raceList = MutableLiveData<List<Race>>(emptyList())
+    private val raceDao = AppDatabase.getInstance(context).raceDao()
 
-    fun getRaces(season: Int): LiveData<List<Race>> {
-        return raceList
-    }
+    fun getRaces(season: Int): LiveData<List<Race>> =
+        Transformations.map(raceDao.getRacesBySeason(season)) { it.toRaceList() }
 
-    suspend fun refreshRaces(season: Int): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshRaces(season: Int): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.races(season)
                 cacheApiRaces(apiResponse)
@@ -32,12 +30,10 @@ class RaceRepository(val context: Context) {
                 }
             }
         }
-    }
 
-    private fun cacheApiRaces(response: ErgastResponse): RefreshResult {
-        val races = response.motorRacingData.raceTable?.races?.toRaceList()
-            ?: return RefreshResult.OTHER_ERROR
-        raceList.postValue(races)
-        return RefreshResult.SUCCESS
-    }
+    private fun cacheApiRaces(response: ErgastResponse): RefreshResult =
+        response.motorRacingData.raceTable?.races?.let { races ->
+            races.forEach { raceDao.insertRace(it.toRaceEntity(), it.circuit.toCircuitEntity()) }
+            RefreshResult.SUCCESS
+        } ?: RefreshResult.OTHER_ERROR
 }

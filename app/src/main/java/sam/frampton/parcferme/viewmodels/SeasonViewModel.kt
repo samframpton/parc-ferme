@@ -11,7 +11,7 @@ import sam.frampton.parcferme.data.repositories.SeasonRepository
 
 class SeasonViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = SeasonRepository()
+    private val repository = SeasonRepository(application)
 
     val seasons = repository.getSeasons()
 

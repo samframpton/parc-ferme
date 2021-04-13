@@ -1,21 +1,24 @@
 package sam.frampton.parcferme.data.repositories
 
+import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.RefreshResult
+import sam.frampton.parcferme.data.toSeasonEntityList
 import sam.frampton.parcferme.data.toSeasonList
+import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class SeasonRepository() {
+class SeasonRepository(context: Context) {
 
-    private val seasonList = MutableLiveData<List<Int>>(emptyList())
+    private val seasonDao = AppDatabase.getInstance(context).seasonDao()
 
     fun getSeasons(): LiveData<List<Int>> {
-        return seasonList
+        return Transformations.map(seasonDao.getSeasons()) { it.toSeasonList() }
     }
 
     suspend fun refreshSeasons(): RefreshResult {
@@ -33,9 +36,9 @@ class SeasonRepository() {
     }
 
     private fun cacheApiSeasons(response: ErgastResponse): RefreshResult {
-        val seasons = response.motorRacingData.seasonTable?.seasons?.toSeasonList()
+        val seasons = response.motorRacingData.seasonTable?.seasons?.toSeasonEntityList()
             ?: return RefreshResult.OTHER_ERROR
-        seasonList.postValue(seasons)
+        seasonDao.insertSeasons(seasons)
         return RefreshResult.SUCCESS
     }
 }

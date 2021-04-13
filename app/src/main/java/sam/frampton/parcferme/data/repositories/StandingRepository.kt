@@ -1,25 +1,27 @@
 package sam.frampton.parcferme.data.repositories
 
+import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
+import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class StandingRepository() {
+class StandingRepository(context: Context) {
 
-    private val driverStandingList = MutableLiveData<List<DriverStanding>>(emptyList())
-    private val constructorStandingList = MutableLiveData<List<ConstructorStanding>>(emptyList())
+    private val standingDao = AppDatabase.getInstance(context).standingDao()
 
-    fun getDriverStandingsBySeason(season: Int): LiveData<List<DriverStanding>> {
-        return driverStandingList
-    }
+    fun getDriverStandingsBySeason(season: Int): LiveData<List<DriverStanding>> =
+        Transformations.map(standingDao.getDriverStandingsBySeason(season)) {
+            it.toDriverStandingList()
+        }
 
-    suspend fun refreshDriverStandingsBySeason(season: Int): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshDriverStandingsBySeason(season: Int): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.driverStandings(season)
                 cacheApiDriverStandings(apiResponse)
@@ -30,14 +32,14 @@ class StandingRepository() {
                 }
             }
         }
-    }
 
-    fun getDriverStandingsByDriver(driverId: String): LiveData<List<DriverStanding>> {
-        return driverStandingList
-    }
+    fun getDriverStandingsByDriver(driverId: String): LiveData<List<DriverStanding>> =
+        Transformations.map(standingDao.getDriverStandingsByDriver(driverId)) {
+            it.toDriverStandingList()
+        }
 
-    suspend fun refreshDriverStandingsByDriver(driverId: String): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshDriverStandingsByDriver(driverId: String): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.driverStandings(driverId)
                 cacheApiDriverStandings(apiResponse)
@@ -48,32 +50,28 @@ class StandingRepository() {
                 }
             }
         }
-    }
 
-    private fun cacheApiDriverStandings(response: ErgastResponse): RefreshResult {
-        val standingsLists = response.motorRacingData.standingsTable?.standingsLists
-            ?: return RefreshResult.OTHER_ERROR
-        var result = RefreshResult.SUCCESS
-        val driverStandings = ArrayList<DriverStanding>()
-        standingsLists.forEach { standingsList ->
-            if (standingsList.driverStandings == null) {
-                result = RefreshResult.OTHER_ERROR
-            } else {
-                standingsList.driverStandings.forEach { driverStanding ->
-                    driverStandings.add(driverStanding.toDriverStanding(standingsList.season))
+    private fun cacheApiDriverStandings(response: ErgastResponse): RefreshResult =
+        response.motorRacingData.standingsTable?.standingsLists?.let { standingsLists ->
+            standingsLists.forEach { standingsList ->
+                standingsList.driverStandings?.forEach { driverStanding ->
+                    standingDao.insertDriverStanding(
+                        driverStanding.toDriverStandingEntity(standingsList.season),
+                        driverStanding.driver.toDriverEntity(),
+                        driverStanding.constructors.toConstructorEntityList()
+                    )
                 }
             }
+            return RefreshResult.SUCCESS
+        } ?: RefreshResult.OTHER_ERROR
+
+    fun getConstructorStandingsBySeason(season: Int): LiveData<List<ConstructorStanding>> =
+        Transformations.map(standingDao.getConstructorStandingsBySeason(season)) {
+            it.toConstructorStandingList()
         }
-        driverStandingList.postValue(driverStandings)
-        return result
-    }
 
-    fun getConstructorStandingsBySeason(season: Int): LiveData<List<ConstructorStanding>> {
-        return constructorStandingList
-    }
-
-    suspend fun refreshConstructorStandingsBySeason(season: Int): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshConstructorStandingsBySeason(season: Int): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.constructorStandings(season)
                 cacheApiConstructorStandings(apiResponse)
@@ -84,15 +82,14 @@ class StandingRepository() {
                 }
             }
         }
-    }
 
-    fun getConstructorStandingsByConstructor(constructorId: String)
-            : LiveData<List<ConstructorStanding>> {
-        return constructorStandingList
-    }
+    fun getConstructorStandingsByConstructor(constructorId: String): LiveData<List<ConstructorStanding>> =
+        Transformations.map(standingDao.getConstructorStandingsByConstructor(constructorId)) {
+            it.toConstructorStandingList()
+        }
 
-    suspend fun refreshConstructorStandingsByConstructor(constructorId: String): RefreshResult {
-        return withContext(Dispatchers.IO) {
+    suspend fun refreshConstructorStandingsByConstructor(constructorId: String): RefreshResult =
+        withContext(Dispatchers.IO) {
             try {
                 val apiResponse = ErgastService.instance.constructorStandings(constructorId)
                 cacheApiConstructorStandings(apiResponse)
@@ -103,25 +100,17 @@ class StandingRepository() {
                 }
             }
         }
-    }
 
-    private fun cacheApiConstructorStandings(response: ErgastResponse): RefreshResult {
-        val standingsLists = response.motorRacingData.standingsTable?.standingsLists
-            ?: return RefreshResult.OTHER_ERROR
-        var result = RefreshResult.SUCCESS
-        val constructorStandings = ArrayList<ConstructorStanding>()
-        standingsLists.forEach { standingsList ->
-            if (standingsList.constructorStandings == null) {
-                result = RefreshResult.OTHER_ERROR
-            } else {
-                standingsList.constructorStandings.forEach { constructorStanding ->
-                    constructorStandings.add(
-                        constructorStanding.toConstructorStanding(standingsList.season)
+    private fun cacheApiConstructorStandings(response: ErgastResponse): RefreshResult =
+        response.motorRacingData.standingsTable?.standingsLists?.let { standingsLists ->
+            standingsLists.forEach { standingsList ->
+                standingsList.constructorStandings?.forEach { constructorStanding ->
+                    standingDao.insertConstructorStanding(
+                        constructorStanding.toConstructorStandingEntity(standingsList.season),
+                        constructorStanding.constructor.toConstructorEntity()
                     )
                 }
             }
-        }
-        constructorStandingList.postValue(constructorStandings)
-        return result
-    }
+            return RefreshResult.SUCCESS
+        } ?: RefreshResult.OTHER_ERROR
 }

@@ -12,7 +12,7 @@ import sam.frampton.parcferme.data.repositories.DriverRepository
 
 class DriverListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = DriverRepository()
+    private val repository = DriverRepository(application)
 
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>

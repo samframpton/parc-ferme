@@ -13,7 +13,7 @@ import sam.frampton.parcferme.data.repositories.ResultRepository
 
 class RaceDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ResultRepository()
+    private val repository = ResultRepository(application)
 
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>

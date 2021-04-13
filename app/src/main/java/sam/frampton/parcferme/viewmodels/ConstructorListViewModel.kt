@@ -12,7 +12,7 @@ import sam.frampton.parcferme.data.repositories.ConstructorRepository
 
 class ConstructorListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ConstructorRepository()
+    private val repository = ConstructorRepository(application)
 
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>
