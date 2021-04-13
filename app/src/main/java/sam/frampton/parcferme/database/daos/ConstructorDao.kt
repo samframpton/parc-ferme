@@ -1,4 +1,4 @@
-package sam.frampton.parcferme.data.daos
+package sam.frampton.parcferme.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
