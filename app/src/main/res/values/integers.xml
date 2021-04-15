@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="data_cache_ttl">86400000</integer>
+</resources>

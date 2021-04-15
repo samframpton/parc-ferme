@@ -5,30 +5,41 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class StandingRepository(context: Context) {
+class StandingRepository(val context: Context) {
 
     private val standingDao = AppDatabase.getInstance(context).standingDao()
+    private val timestampManager = TimestampManager(context)
 
     fun getDriverStandingsBySeason(season: Int): LiveData<List<DriverStanding>> =
         Transformations.map(standingDao.getDriverStandingsBySeason(season)) {
             it.toDriverStandingList()
         }
 
-    suspend fun refreshDriverStandingsBySeason(season: Int): RefreshResult =
+    suspend fun refreshDriverStandingsBySeason(season: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.driverStandings(season)
-                cacheApiDriverStandings(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val driverKey = context.getString(R.string.driver_standing_timestamp_key)
+            if (!force && timestampManager.isCacheValid(driverKey, season.toString())) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.driverStandings(season)
+                    cacheApiDriverStandings(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(driverKey, season.toString())
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }
@@ -38,15 +49,27 @@ class StandingRepository(context: Context) {
             it.toDriverStandingList()
         }
 
-    suspend fun refreshDriverStandingsByDriver(driverId: String): RefreshResult =
+    suspend fun refreshDriverStandingsByDriver(
+        driverId: String,
+        force: Boolean = false
+    ): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.driverStandings(driverId)
-                cacheApiDriverStandings(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val driverKey = context.getString(R.string.driver_standing_timestamp_key)
+            if (!force && timestampManager.isCacheValid(driverKey, driverId)) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.driverStandings(driverId)
+                    cacheApiDriverStandings(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(driverKey, driverId)
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }
@@ -70,33 +93,58 @@ class StandingRepository(context: Context) {
             it.toConstructorStandingList()
         }
 
-    suspend fun refreshConstructorStandingsBySeason(season: Int): RefreshResult =
+    suspend fun refreshConstructorStandingsBySeason(
+        season: Int,
+        force: Boolean = false
+    ): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.constructorStandings(season)
-                cacheApiConstructorStandings(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val constructorKey = context.getString(R.string.constructor_standing_timestamp_key)
+            if (!force && timestampManager.isCacheValid(constructorKey, season.toString())) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.constructorStandings(season)
+                    cacheApiConstructorStandings(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(constructorKey, season.toString())
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }
 
-    fun getConstructorStandingsByConstructor(constructorId: String): LiveData<List<ConstructorStanding>> =
+    fun getConstructorStandingsByConstructor(constructorId: String):
+            LiveData<List<ConstructorStanding>> =
         Transformations.map(standingDao.getConstructorStandingsByConstructor(constructorId)) {
             it.toConstructorStandingList()
         }
 
-    suspend fun refreshConstructorStandingsByConstructor(constructorId: String): RefreshResult =
+    suspend fun refreshConstructorStandingsByConstructor(
+        constructorId: String,
+        force: Boolean = false
+    ): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.constructorStandings(constructorId)
-                cacheApiConstructorStandings(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val constructorKey = context.getString(R.string.constructor_standing_timestamp_key)
+            if (!force && timestampManager.isCacheValid(constructorKey, constructorId)) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.constructorStandings(constructorId)
+                    cacheApiConstructorStandings(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(constructorKey, constructorId)
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }

@@ -28,6 +28,8 @@ class DriverDetailViewModel(application: Application) : AndroidViewModel(applica
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getDriverStandingsByDriver(driverId)

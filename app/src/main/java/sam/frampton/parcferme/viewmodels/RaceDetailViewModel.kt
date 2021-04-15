@@ -29,6 +29,8 @@ class RaceDetailViewModel(application: Application) : AndroidViewModel(applicati
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getRaceResults(season, round)
@@ -40,6 +42,8 @@ class RaceDetailViewModel(application: Application) : AndroidViewModel(applicati
                 RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
+                }
+                RefreshResult.CACHE -> {
                 }
             }
         }

@@ -5,30 +5,44 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class ResultRepository(context: Context) {
+class ResultRepository(val context: Context) {
 
     private val resultDao = AppDatabase.getInstance(context).resultDao()
+    private val timestampManager = TimestampManager(context)
 
     fun getRaceResults(season: Int, round: Int): LiveData<List<RaceResult>> =
         Transformations.map(resultDao.getRaceResultsBySeasonRound(season, round)) {
             it.toRaceResultList()
         }
 
-    suspend fun refreshRaceResults(season: Int, round: Int): RefreshResult =
+    suspend fun refreshRaceResults(season: Int, round: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.raceResults(season, round)
-                cacheApiRaceResults(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val raceKey = context.getString(R.string.race_result_timestamp_key)
+            if (!force && timestampManager.isCacheValid(raceKey, season.toString())) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.raceResults(season, round)
+                    cacheApiRaceResults(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(
+                                raceKey,
+                                "$season$round"
+                            )
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }
@@ -50,15 +64,33 @@ class ResultRepository(context: Context) {
             it.toQualifyingResultList()
         }
 
-    suspend fun refreshQualifyingResults(season: Int, round: Int): RefreshResult =
+    suspend fun refreshQualifyingResults(
+        season: Int,
+        round: Int,
+        force: Boolean = false
+    ): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.qualifyingResults(season, round)
-                cacheApiQualifyingResults(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val qualifyingKey = context.getString(R.string.qualifying_result_timestamp_key)
+            if (!force &&
+                timestampManager.isCacheValid(qualifyingKey, season.toString())
+            ) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.qualifyingResults(season, round)
+                    cacheApiQualifyingResults(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(
+                                qualifyingKey,
+                                "$season$round"
+                            )
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }

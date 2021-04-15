@@ -29,6 +29,8 @@ class ConstructorDetailViewModel(application: Application) : AndroidViewModel(ap
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getConstructorStandingsByConstructor(constructor.constructorId)

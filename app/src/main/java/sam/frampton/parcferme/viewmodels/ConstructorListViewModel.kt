@@ -28,6 +28,8 @@ class ConstructorListViewModel(application: Application) : AndroidViewModel(appl
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getConstructors(season)

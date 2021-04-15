@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
@@ -14,19 +15,29 @@ import java.io.IOException
 class RaceRepository(val context: Context) {
 
     private val raceDao = AppDatabase.getInstance(context).raceDao()
+    private val timestampManager = TimestampManager(context)
 
     fun getRaces(season: Int): LiveData<List<Race>> =
         Transformations.map(raceDao.getRacesBySeason(season)) { it.toRaceList() }
 
-    suspend fun refreshRaces(season: Int): RefreshResult =
+    suspend fun refreshRaces(season: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.races(season)
-                cacheApiRaces(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val raceKey = context.getString(R.string.race_timestamp_key)
+            if (!force && timestampManager.isCacheValid(raceKey, season.toString())) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.races(season)
+                    cacheApiRaces(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(raceKey, season.toString())
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }

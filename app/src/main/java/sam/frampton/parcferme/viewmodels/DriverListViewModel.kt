@@ -28,6 +28,8 @@ class DriverListViewModel(application: Application) : AndroidViewModel(applicati
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getDrivers(season)

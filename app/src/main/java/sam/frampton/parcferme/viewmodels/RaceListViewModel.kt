@@ -28,6 +28,8 @@ class RaceListViewModel(application: Application) : AndroidViewModel(application
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getRaces(season)

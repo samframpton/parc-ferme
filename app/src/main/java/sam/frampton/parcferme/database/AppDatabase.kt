@@ -9,6 +9,7 @@ import sam.frampton.parcferme.database.entities.*
 
 @Database(
     entities = [
+        DataTimestampEntity::class,
         SeasonEntity::class,
         DriverEntity::class,
         SeasonDriverCrossRef::class,
@@ -26,6 +27,8 @@ import sam.frampton.parcferme.database.entities.*
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun dataTimestampDao(): DataTimestampDao
 
     abstract fun seasonDao(): SeasonDao
 

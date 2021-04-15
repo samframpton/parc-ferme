@@ -29,6 +29,8 @@ class StandingListViewModel(application: Application) : AndroidViewModel(applica
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
                 }
+                RefreshResult.CACHE -> {
+                }
             }
         }
         return repository.getDriverStandingsBySeason(season)
@@ -40,6 +42,8 @@ class StandingListViewModel(application: Application) : AndroidViewModel(applica
                 RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
                 RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
                 RefreshResult.SUCCESS -> {
+                }
+                RefreshResult.CACHE -> {
                 }
             }
         }

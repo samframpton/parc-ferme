@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.Driver
@@ -14,24 +15,32 @@ import sam.frampton.parcferme.data.toDriverList
 import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
 
-class DriverRepository(context: Context) {
+class DriverRepository(val context: Context) {
 
     private val driverDao = AppDatabase.getInstance(context).driverDao()
+    private val timestampManager = TimestampManager(context)
 
     fun getDrivers(season: Int): LiveData<List<Driver>> =
-        Transformations.map(driverDao.getDriversBySeason(season)) {
-            it.drivers.toDriverList()
-        }
+        Transformations.map(driverDao.getDriversBySeason(season)) { it.drivers.toDriverList() }
 
-    suspend fun refreshDrivers(season: Int): RefreshResult =
+    suspend fun refreshDrivers(season: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {
-            try {
-                val apiResponse = ErgastService.instance.drivers(season)
-                cacheApiDrivers(apiResponse)
-            } catch (throwable: Throwable) {
-                when (throwable) {
-                    is IOException -> RefreshResult.NETWORK_ERROR
-                    else -> RefreshResult.OTHER_ERROR
+            val driverKey = context.getString(R.string.driver_timestamp_key)
+            if (!force && timestampManager.isCacheValid(driverKey, season.toString())) {
+                RefreshResult.CACHE
+            } else {
+                try {
+                    val apiResponse = ErgastService.instance.drivers(season)
+                    cacheApiDrivers(apiResponse).apply {
+                        if (this == RefreshResult.SUCCESS) {
+                            timestampManager.updateCacheTimestamp(driverKey, season.toString())
+                        }
+                    }
+                } catch (throwable: Throwable) {
+                    when (throwable) {
+                        is IOException -> RefreshResult.NETWORK_ERROR
+                        else -> RefreshResult.OTHER_ERROR
+                    }
                 }
             }
         }

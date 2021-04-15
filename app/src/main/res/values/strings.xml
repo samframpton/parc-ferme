@@ -14,4 +14,13 @@
         <item>Drivers</item>
         <item>Constructors</item>
     </string-array>
+
+    <string name="season_timestamp_key">season_cache_timestamp</string>
+    <string name="driver_timestamp_key">driver_cache_timestamp</string>
+    <string name="constructor_timestamp_key">constructor_cache_timestamp</string>
+    <string name="race_timestamp_key">race_cache_timestamp</string>
+    <string name="race_result_timestamp_key">race_result_cache_timestamp</string>
+    <string name="qualifying_result_timestamp_key">qualifying_result_cache_timestamp</string>
+    <string name="driver_standing_timestamp_key">driver_standing_cache_timestamp</string>
+    <string name="constructor_standing_timestamp_key">constructor_standing_cache_timestamp</string>
 </resources>
