@@ -1,6 +1,7 @@
 package sam.frampton.parcferme.data.repositories
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,8 @@ import sam.frampton.parcferme.data.toSeasonEntityList
 import sam.frampton.parcferme.data.toSeasonList
 import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
+
+private const val LOG_TAG = "SeasonRepository"
 
 class SeasonRepository(val context: Context) {
 
@@ -36,6 +39,7 @@ class SeasonRepository(val context: Context) {
                         }
                     }
                 } catch (throwable: Throwable) {
+                    Log.d(LOG_TAG, "refresh seasons error", throwable)
                     when (throwable) {
                         is IOException -> RefreshResult.NETWORK_ERROR
                         else -> RefreshResult.OTHER_ERROR

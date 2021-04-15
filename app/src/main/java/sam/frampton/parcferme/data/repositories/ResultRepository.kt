@@ -1,6 +1,7 @@
 package sam.frampton.parcferme.data.repositories
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,8 @@ import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
 import java.io.IOException
+
+private const val LOG_TAG = "ResultRepository"
 
 class ResultRepository(val context: Context) {
 
@@ -39,6 +42,11 @@ class ResultRepository(val context: Context) {
                         }
                     }
                 } catch (throwable: Throwable) {
+                    Log.d(
+                        LOG_TAG,
+                        "refresh race results error (season=$season, round=$round)",
+                        throwable
+                    )
                     when (throwable) {
                         is IOException -> RefreshResult.NETWORK_ERROR
                         else -> RefreshResult.OTHER_ERROR
@@ -87,6 +95,11 @@ class ResultRepository(val context: Context) {
                         }
                     }
                 } catch (throwable: Throwable) {
+                    Log.d(
+                        LOG_TAG,
+                        "refresh qualifying results error (season=$season, round=$round)",
+                        throwable
+                    )
                     when (throwable) {
                         is IOException -> RefreshResult.NETWORK_ERROR
                         else -> RefreshResult.OTHER_ERROR
