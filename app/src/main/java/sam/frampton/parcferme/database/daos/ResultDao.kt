@@ -38,15 +38,15 @@ abstract class ResultDao {
         insertQualifyingResult(qualifyingResult)
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertDriver(driver: DriverEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertConstructor(constructor: ConstructorEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertRaceResult(raceResult: RaceResultEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertQualifyingResult(qualifyingResult: QualifyingResultEntity)
 }

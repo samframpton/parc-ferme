@@ -25,9 +25,9 @@ abstract class DriverDao {
         )
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertDrivers(drivers: List<DriverEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertSeasonDriverCrossRefs(crossRefs: List<SeasonDriverCrossRef>)
 }

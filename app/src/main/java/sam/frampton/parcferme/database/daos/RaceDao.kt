@@ -18,9 +18,9 @@ abstract class RaceDao {
         insertRace(race)
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertCircuit(circuit: CircuitEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertRace(race: RaceEntity)
 }

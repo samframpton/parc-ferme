@@ -20,10 +20,10 @@ abstract class ConstructorDao {
         )
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertConstructors(constructors: List<ConstructorEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertSeasonConstructorCrossRefs(
         crossRefs: List<SeasonConstructorCrossRef>
     )

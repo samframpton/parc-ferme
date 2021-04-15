@@ -34,11 +34,13 @@ abstract class StandingDao {
     ) {
         insertDriver(driver)
         val driverStandingId = insertDriverStanding(driverStanding)
-        constructors.forEach {
-            insertConstructor(it)
-            insertDriverStandingConstructorCrossRef(
-                DriverStandingConstructorCrossRef(driverStandingId, it.constructorId)
-            )
+        if (driverStandingId != -1L) {
+            constructors.forEach {
+                insertConstructor(it)
+                insertDriverStandingConstructorCrossRef(
+                    DriverStandingConstructorCrossRef(driverStandingId, it.constructorId)
+                )
+            }
         }
     }
 
@@ -51,20 +53,20 @@ abstract class StandingDao {
         insertConstructorStanding(constructorStanding)
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertDriverStanding(driverStanding: DriverStandingEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertDriverStandingConstructorCrossRef(
         crossRef: DriverStandingConstructorCrossRef
     )
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertConstructorStanding(constructorStanding: ConstructorStandingEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertDriver(driver: DriverEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertConstructor(constructor: ConstructorEntity)
 }
