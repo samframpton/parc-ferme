@@ -37,9 +37,12 @@ class ConstructorListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        constructorAdapter = ConstructorAdapter {
+        constructorAdapter = ConstructorAdapter { constructor ->
             val directions = ConstructorListFragmentDirections
-                .actionConstructorListFragmentToConstructorDetailFragment(it)
+                .actionConstructorListFragmentToConstructorDetailFragment(
+                    constructor,
+                    constructor.name
+                )
             findNavController().navigate(directions)
         }
         binding.rvConstructorListConstructors.adapter = constructorAdapter

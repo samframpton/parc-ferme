@@ -46,14 +46,20 @@ class StandingListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        driverAdapter = DriverStandingAdapter {
+        driverAdapter = DriverStandingAdapter { standing ->
             val directions = StandingListFragmentDirections
-                .actionStandingListFragmentToDriverDetailFragment(it.driver)
+                .actionStandingListFragmentToDriverDetailFragment(
+                    standing.driver,
+                    "${standing.driver.givenName} ${standing.driver.familyName}"
+                )
             findNavController().navigate(directions)
         }
-        constructorAdapter = ConstructorStandingAdapter {
+        constructorAdapter = ConstructorStandingAdapter { standing ->
             val directions = StandingListFragmentDirections
-                .actionStandingListFragmentToConstructorDetailFragment(it.constructor)
+                .actionStandingListFragmentToConstructorDetailFragment(
+                    standing.constructor,
+                    standing.constructor.name
+                )
             findNavController().navigate(directions)
         }
         binding.rvStandingListStandings.adapter =

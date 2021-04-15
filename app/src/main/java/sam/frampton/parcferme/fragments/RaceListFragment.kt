@@ -37,9 +37,12 @@ class RaceListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        raceAdapter = RaceAdapter {
-            val directions =
-                RaceListFragmentDirections.actionRaceListFragmentToRaceDetailFragment(it)
+        raceAdapter = RaceAdapter { race ->
+            val directions = RaceListFragmentDirections
+                .actionRaceListFragmentToRaceDetailFragment(
+                    race,
+                    race.raceName
+                )
             findNavController().navigate(directions)
         }
         binding.rvRaceListRaces.adapter = raceAdapter

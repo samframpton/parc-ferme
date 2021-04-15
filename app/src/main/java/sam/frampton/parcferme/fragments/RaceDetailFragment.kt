@@ -40,14 +40,20 @@ class RaceDetailFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        raceResultAdapter = RaceResultAdapter {
+        raceResultAdapter = RaceResultAdapter { result ->
             val action = RaceDetailFragmentDirections
-                .actionRaceDetailFragmentToDriverDetailFragment(it.driver)
+                .actionRaceDetailFragmentToDriverDetailFragment(
+                    result.driver,
+                    "${result.driver.givenName} ${result.driver.familyName}"
+                )
             findNavController().navigate(action)
         }
-        qualifyingResultAdapter = QualifyingResultAdapter {
+        qualifyingResultAdapter = QualifyingResultAdapter { result ->
             val action = RaceDetailFragmentDirections
-                .actionRaceDetailFragmentToDriverDetailFragment(it.driver)
+                .actionRaceDetailFragmentToDriverDetailFragment(
+                    result.driver,
+                    "${result.driver.givenName} ${result.driver.familyName}"
+                )
             findNavController().navigate(action)
         }
         binding.rvRaceDetailResults.adapter = raceResultAdapter

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/driverListFragment"
         android:name="sam.frampton.parcferme.fragments.DriverListFragment"
-        android:label="fragment_driver_list"
+        android:label="@string/drivers"
         tools:layout="@layout/fragment_driver_list">
         <action
             android:id="@+id/action_driverListFragment_to_driverDetailFragment"
@@ -17,11 +17,14 @@
     <fragment
         android:id="@+id/driverDetailFragment"
         android:name="sam.frampton.parcferme.fragments.DriverDetailFragment"
-        android:label="fragment_driver_detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_driver_detail">
         <argument
             android:name="driver"
             app:argType="sam.frampton.parcferme.data.Driver" />
+        <argument
+            android:name="title"
+            app:argType="string" />
         <action
             android:id="@+id/action_driverDetailFragment_to_standingListFragment"
             app:destination="@id/standingListFragment" />
@@ -29,7 +32,7 @@
     <fragment
         android:id="@+id/constructorListFragment"
         android:name="sam.frampton.parcferme.fragments.ConstructorListFragment"
-        android:label="fragment_constructor_list"
+        android:label="@string/constructors"
         tools:layout="@layout/fragment_constructor_list">
         <action
             android:id="@+id/action_constructorListFragment_to_constructorDetailFragment"
@@ -38,11 +41,14 @@
     <fragment
         android:id="@+id/constructorDetailFragment"
         android:name="sam.frampton.parcferme.fragments.ConstructorDetailFragment"
-        android:label="fragment_constructor_detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_constructor_detail">
         <argument
             android:name="constructor"
             app:argType="sam.frampton.parcferme.data.Constructor" />
+        <argument
+            android:name="title"
+            app:argType="string" />
         <action
             android:id="@+id/action_constructorDetailFragment_to_standingListFragment"
             app:destination="@id/standingListFragment" />
@@ -50,7 +56,7 @@
     <fragment
         android:id="@+id/raceListFragment"
         android:name="sam.frampton.parcferme.fragments.RaceListFragment"
-        android:label="fragment_race_list"
+        android:label="@string/races"
         tools:layout="@layout/fragment_race_list">
         <action
             android:id="@+id/action_raceListFragment_to_raceDetailFragment"
@@ -59,11 +65,14 @@
     <fragment
         android:id="@+id/raceDetailFragment"
         android:name="sam.frampton.parcferme.fragments.RaceDetailFragment"
-        android:label="fragment_race_detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_race_detail">
         <argument
             android:name="race"
             app:argType="sam.frampton.parcferme.data.Race" />
+        <argument
+            android:name="title"
+            app:argType="string" />
         <action
             android:id="@+id/action_raceDetailFragment_to_driverDetailFragment"
             app:destination="@id/driverDetailFragment" />
@@ -71,7 +80,7 @@
     <fragment
         android:id="@+id/standingListFragment"
         android:name="sam.frampton.parcferme.fragments.StandingListFragment"
-        android:label="fragment_standing_list"
+        android:label="@string/standings"
         tools:layout="@layout/fragment_standing_list">
         <argument
             android:name="standingType"
