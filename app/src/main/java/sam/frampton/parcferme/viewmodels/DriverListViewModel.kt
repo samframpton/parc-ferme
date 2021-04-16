@@ -1,10 +1,7 @@
 package sam.frampton.parcferme.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import sam.frampton.parcferme.data.Driver
 import sam.frampton.parcferme.data.RefreshResult
@@ -14,6 +11,13 @@ class DriverListViewModel(application: Application) : AndroidViewModel(applicati
 
     private val repository = DriverRepository(application)
 
+    var season: Int? = null
+        private set
+    private val _driverList = MediatorLiveData<List<Driver>>()
+    val driverList: LiveData<List<Driver>>
+        get() = _driverList
+    private var seasonDriverList: LiveData<List<Driver>>? = null
+
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>
         get() = _networkError
@@ -21,22 +25,37 @@ class DriverListViewModel(application: Application) : AndroidViewModel(applicati
     val otherError: LiveData<Boolean>
         get() = _otherError
 
-    fun getDrivers(season: Int): LiveData<List<Driver>> {
-        viewModelScope.launch {
-            when (repository.refreshDrivers(season)) {
-                RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                RefreshResult.SUCCESS -> {
-                }
-                RefreshResult.CACHE -> {
+    fun setSeason(season: Int) {
+        this.season = season
+        seasonDriverList?.let { _driverList.removeSource(it) }
+        repository.getDrivers(season).also {
+            seasonDriverList = it
+            _driverList.addSource(it) { drivers -> _driverList.value = drivers }
+        }
+    }
+
+    fun refreshDrivers(force: Boolean) {
+        season?.let { season ->
+            viewModelScope.launch {
+                when (repository.refreshDrivers(season, force)) {
+                    RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
+                    RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
+                    RefreshResult.SUCCESS -> {
+                    }
+                    RefreshResult.CACHE -> {
+                    }
                 }
             }
         }
-        return repository.getDrivers(season)
     }
 
     fun clearErrors() {
         _networkError.value = false
         _otherError.value = false
+    }
+
+    override fun onCleared() {
+        seasonDriverList?.let { _driverList.removeSource(it) }
+        seasonDriverList = null
     }
 }

@@ -8,11 +8,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.ConstructorAdapter
-import sam.frampton.parcferme.data.Constructor
 import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
 import sam.frampton.parcferme.viewmodels.ConstructorListViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
@@ -20,10 +17,8 @@ import sam.frampton.parcferme.viewmodels.SeasonViewModel
 class ConstructorListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
-    private val constructorListViewModel: ConstructorListViewModel by viewModels()
+    private val constructorListViewModel: ConstructorListViewModel by activityViewModels()
     private lateinit var binding: FragmentConstructorListBinding
-    private lateinit var constructorAdapter: ConstructorAdapter
-    private var constructorList: LiveData<List<Constructor>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +32,7 @@ class ConstructorListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        constructorAdapter = ConstructorAdapter { constructor ->
+        val constructorAdapter = ConstructorAdapter { constructor ->
             val directions = ConstructorListFragmentDirections
                 .actionConstructorListFragmentToConstructorDetailFragment(
                     constructor,
@@ -46,6 +41,9 @@ class ConstructorListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvConstructorListConstructors.adapter = constructorAdapter
+        constructorListViewModel.constructorList.observe(viewLifecycleOwner) {
+            constructorAdapter.submitList(it)
+        }
     }
 
     private fun initialiseSpinner() {
@@ -62,10 +60,9 @@ class ConstructorListFragment : Fragment() {
                     id: Long
                 ) {
                     val season = parent.getItemAtPosition(position) as Int
-                    constructorList?.removeObservers(viewLifecycleOwner)
-                    constructorList = constructorListViewModel.getConstructors(season)
-                    constructorList?.observe(viewLifecycleOwner) {
-                        constructorAdapter.submitList(it)
+                    if (constructorListViewModel.season != season) {
+                        constructorListViewModel.setSeason(season)
+                        constructorListViewModel.refreshConstructors(false)
                     }
                 }
 
@@ -79,6 +76,9 @@ class ConstructorListFragment : Fragment() {
                 seasonList.clear()
                 seasonList.addAll(seasons)
                 spinnerAdapter.notifyDataSetChanged()
+                constructorListViewModel.season?.let {
+                    binding.spConstructorListSeason.setSelection(seasons.indexOf(it))
+                }
             }
         }
     }

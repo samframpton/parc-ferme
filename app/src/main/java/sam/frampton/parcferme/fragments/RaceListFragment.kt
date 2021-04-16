@@ -8,11 +8,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.RaceAdapter
-import sam.frampton.parcferme.data.Race
 import sam.frampton.parcferme.databinding.FragmentRaceListBinding
 import sam.frampton.parcferme.viewmodels.RaceListViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
@@ -20,10 +17,8 @@ import sam.frampton.parcferme.viewmodels.SeasonViewModel
 class RaceListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
-    private val raceListViewModel: RaceListViewModel by viewModels()
+    private val raceListViewModel: RaceListViewModel by activityViewModels()
     private lateinit var binding: FragmentRaceListBinding
-    private lateinit var raceAdapter: RaceAdapter
-    private var raceList: LiveData<List<Race>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +32,7 @@ class RaceListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        raceAdapter = RaceAdapter { race ->
+        val raceAdapter = RaceAdapter { race ->
             val directions = RaceListFragmentDirections
                 .actionRaceListFragmentToRaceDetailFragment(
                     race,
@@ -46,6 +41,9 @@ class RaceListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvRaceListRaces.adapter = raceAdapter
+        raceListViewModel.raceList.observe(viewLifecycleOwner) {
+            raceAdapter.submitList(it)
+        }
     }
 
     private fun initialiseSpinner() {
@@ -62,9 +60,10 @@ class RaceListFragment : Fragment() {
                     id: Long
                 ) {
                     val season = parent.getItemAtPosition(position) as Int
-                    raceList?.removeObservers(viewLifecycleOwner)
-                    raceList = raceListViewModel.getRaces(season)
-                    raceList?.observe(viewLifecycleOwner) { raceAdapter.submitList(it) }
+                    if (raceListViewModel.season != season) {
+                        raceListViewModel.setSeason(season)
+                        raceListViewModel.refreshRaces(false)
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -77,6 +76,9 @@ class RaceListFragment : Fragment() {
                 seasonList.clear()
                 seasonList.addAll(seasons)
                 spinnerAdapter.notifyDataSetChanged()
+                raceListViewModel.season?.let {
+                    binding.spRaceListSeason.setSelection(seasons.indexOf(it))
+                }
             }
         }
     }

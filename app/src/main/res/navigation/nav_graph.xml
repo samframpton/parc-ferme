@@ -84,7 +84,7 @@
         tools:layout="@layout/fragment_standing_list">
         <argument
             android:name="standingType"
-            android:defaultValue="DRIVER"
+            android:defaultValue="DEFAULT"
             app:argType="sam.frampton.parcferme.fragments.StandingListFragment$StandingType" />
         <argument
             android:name="season"

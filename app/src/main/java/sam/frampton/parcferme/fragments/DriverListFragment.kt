@@ -8,11 +8,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import sam.frampton.parcferme.adapters.DriverAdapter
-import sam.frampton.parcferme.data.Driver
 import sam.frampton.parcferme.databinding.FragmentDriverListBinding
 import sam.frampton.parcferme.viewmodels.DriverListViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
@@ -20,10 +17,8 @@ import sam.frampton.parcferme.viewmodels.SeasonViewModel
 class DriverListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
-    private val driverListViewModel: DriverListViewModel by viewModels()
+    private val driverListViewModel: DriverListViewModel by activityViewModels()
     private lateinit var binding: FragmentDriverListBinding
-    private lateinit var driverAdapter: DriverAdapter
-    private var driverList: LiveData<List<Driver>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +32,7 @@ class DriverListFragment : Fragment() {
     }
 
     private fun initialiseRecyclerView() {
-        driverAdapter = DriverAdapter { driver ->
+        val driverAdapter = DriverAdapter { driver ->
             val directions = DriverListFragmentDirections
                 .actionDriverListFragmentToDriverDetailFragment(
                     driver,
@@ -46,6 +41,9 @@ class DriverListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvDriverListDrivers.adapter = driverAdapter
+        driverListViewModel.driverList.observe(viewLifecycleOwner) {
+            driverAdapter.submitList(it)
+        }
     }
 
     private fun initialiseSpinner() {
@@ -62,9 +60,10 @@ class DriverListFragment : Fragment() {
                     id: Long
                 ) {
                     val season = parent.getItemAtPosition(position) as Int
-                    driverList?.removeObservers(viewLifecycleOwner)
-                    driverList = driverListViewModel.getDrivers(season)
-                    driverList?.observe(viewLifecycleOwner) { driverAdapter.submitList(it) }
+                    if (driverListViewModel.season != season) {
+                        driverListViewModel.setSeason(season)
+                        driverListViewModel.refreshDrivers(false)
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -77,6 +76,9 @@ class DriverListFragment : Fragment() {
                 seasonList.clear()
                 seasonList.addAll(seasons)
                 spinnerAdapter.notifyDataSetChanged()
+                driverListViewModel.season?.let {
+                    binding.spDriverListSeason.setSelection(seasons.indexOf(it))
+                }
             }
         }
     }

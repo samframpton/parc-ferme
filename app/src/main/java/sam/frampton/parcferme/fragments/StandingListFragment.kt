@@ -8,30 +8,25 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
 import sam.frampton.parcferme.adapters.DriverStandingAdapter
-import sam.frampton.parcferme.data.ConstructorStanding
-import sam.frampton.parcferme.data.DriverStanding
 import sam.frampton.parcferme.databinding.FragmentStandingListBinding
+import sam.frampton.parcferme.fragments.StandingListFragment.StandingType.*
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 import sam.frampton.parcferme.viewmodels.StandingListViewModel
 
 class StandingListFragment : Fragment() {
 
-    enum class StandingType { DRIVER, CONSTRUCTOR }
+    enum class StandingType { DRIVER, CONSTRUCTOR, DEFAULT }
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
-    private val standingListViewModel: StandingListViewModel by viewModels()
+    private val standingListViewModel: StandingListViewModel by activityViewModels()
     private val args: StandingListFragmentArgs by navArgs()
     private lateinit var binding: FragmentStandingListBinding
     private lateinit var driverAdapter: DriverStandingAdapter
     private lateinit var constructorAdapter: ConstructorStandingAdapter
-    private var driverStandingList: LiveData<List<DriverStanding>>? = null
-    private var constructorStandingList: LiveData<List<ConstructorStanding>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +49,9 @@ class StandingListFragment : Fragment() {
                 )
             findNavController().navigate(directions)
         }
+        standingListViewModel.driverStandingList.observe(viewLifecycleOwner) {
+            driverAdapter.submitList(it)
+        }
         constructorAdapter = ConstructorStandingAdapter { standing ->
             val directions = StandingListFragmentDirections
                 .actionStandingListFragmentToConstructorDetailFragment(
@@ -62,17 +60,9 @@ class StandingListFragment : Fragment() {
                 )
             findNavController().navigate(directions)
         }
-        binding.rvStandingListStandings.adapter =
-            when (args.standingType) {
-                StandingType.DRIVER -> {
-                    binding.spStandingListType.setSelection(0)
-                    driverAdapter
-                }
-                StandingType.CONSTRUCTOR -> {
-                    binding.spStandingListType.setSelection(1)
-                    constructorAdapter
-                }
-            }
+        standingListViewModel.constructorStandingList.observe(viewLifecycleOwner) {
+            constructorAdapter.submitList(it)
+        }
     }
 
     private fun initialiseSeasonSpinner() {
@@ -89,15 +79,8 @@ class StandingListFragment : Fragment() {
                     id: Long
                 ) {
                     val season = parent.getItemAtPosition(position) as Int
-                    driverStandingList?.removeObservers(viewLifecycleOwner)
-                    driverStandingList = standingListViewModel.getDriverStandings(season)
-                    driverStandingList?.observe(viewLifecycleOwner) {
-                        driverAdapter.submitList(it)
-                    }
-                    constructorStandingList?.removeObservers(viewLifecycleOwner)
-                    constructorStandingList = standingListViewModel.getConstructorStandings(season)
-                    constructorStandingList?.observe(viewLifecycleOwner) {
-                        constructorAdapter.submitList(it)
+                    if (standingListViewModel.season != season) {
+                        setSeason(season)
                     }
                 }
 
@@ -105,20 +88,33 @@ class StandingListFragment : Fragment() {
                     TODO("Not yet implemented")
                 }
             }
-
+        if (args.season != -1) {
+            setSeason(args.season)
+        }
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
             if (seasons.isNotEmpty()) {
                 seasonList.clear()
                 seasonList.addAll(seasons)
-                if (seasonList.contains(args.season)) {
-                    binding.spStandingListSeason.setSelection(seasons.indexOf(args.season))
+                standingListViewModel.season?.let {
+                    binding.spStandingListSeason.setSelection(seasons.indexOf(it))
                 }
                 spinnerAdapter.notifyDataSetChanged()
             }
         }
     }
 
+    private fun setSeason(season: Int) {
+        standingListViewModel.setSeason(season)
+        standingListViewModel.refreshDriverStandings(false)
+        standingListViewModel.refreshConstructorStandings(false)
+    }
+
     private fun initialiseTypeSpinner() {
+        if (args.standingType == CONSTRUCTOR ||
+            (args.standingType == DEFAULT && standingListViewModel.standingType == CONSTRUCTOR)
+        ) {
+            binding.spStandingListType.setSelection(1)
+        }
         binding.spStandingListType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -128,8 +124,14 @@ class StandingListFragment : Fragment() {
                     id: Long
                 ) {
                     when (position) {
-                        0 -> binding.rvStandingListStandings.adapter = driverAdapter
-                        1 -> binding.rvStandingListStandings.adapter = constructorAdapter
+                        0 -> {
+                            standingListViewModel.standingType = DRIVER
+                            binding.rvStandingListStandings.adapter = driverAdapter
+                        }
+                        1 -> {
+                            standingListViewModel.standingType = CONSTRUCTOR
+                            binding.rvStandingListStandings.adapter = constructorAdapter
+                        }
                     }
                 }
 

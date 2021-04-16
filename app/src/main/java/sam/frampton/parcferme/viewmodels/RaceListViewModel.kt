@@ -1,10 +1,7 @@
 package sam.frampton.parcferme.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import sam.frampton.parcferme.data.Race
 import sam.frampton.parcferme.data.RefreshResult
@@ -14,6 +11,13 @@ class RaceListViewModel(application: Application) : AndroidViewModel(application
 
     private val repository = RaceRepository(application)
 
+    var season: Int? = null
+        private set
+    private val _raceList = MediatorLiveData<List<Race>>()
+    val raceList: LiveData<List<Race>>
+        get() = _raceList
+    private var seasonRaceList: LiveData<List<Race>>? = null
+
     private val _networkError = MutableLiveData(false)
     val networkError: LiveData<Boolean>
         get() = _networkError
@@ -21,22 +25,37 @@ class RaceListViewModel(application: Application) : AndroidViewModel(application
     val otherError: LiveData<Boolean>
         get() = _otherError
 
-    fun getRaces(season: Int): LiveData<List<Race>> {
-        viewModelScope.launch {
-            when (repository.refreshRaces(season)) {
-                RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                RefreshResult.SUCCESS -> {
-                }
-                RefreshResult.CACHE -> {
+    fun setSeason(season: Int) {
+        this.season = season
+        seasonRaceList?.let { _raceList.removeSource(it) }
+        repository.getRaces(season).also {
+            seasonRaceList = it
+            _raceList.addSource(it) { races -> _raceList.value = races }
+        }
+    }
+
+    fun refreshRaces(force: Boolean) {
+        season?.let { season ->
+            viewModelScope.launch {
+                when (repository.refreshRaces(season, force)) {
+                    RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
+                    RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
+                    RefreshResult.SUCCESS -> {
+                    }
+                    RefreshResult.CACHE -> {
+                    }
                 }
             }
         }
-        return repository.getRaces(season)
     }
 
     fun clearErrors() {
         _networkError.value = false
         _otherError.value = false
+    }
+
+    override fun onCleared() {
+        seasonRaceList?.let { _raceList.removeSource(it) }
+        seasonRaceList = null
     }
 }
