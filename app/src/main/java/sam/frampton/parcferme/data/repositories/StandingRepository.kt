@@ -22,7 +22,7 @@ class StandingRepository(val context: Context) {
 
     fun getDriverStandingsBySeason(season: Int): LiveData<List<DriverStanding>> =
         Transformations.map(standingDao.getDriverStandingsBySeason(season)) {
-            it.toDriverStandingList()
+            it.toDriverStandingList().sorted()
         }
 
     suspend fun refreshDriverStandingsBySeason(season: Int, force: Boolean = false): RefreshResult =
@@ -54,7 +54,7 @@ class StandingRepository(val context: Context) {
 
     fun getDriverStandingsByDriver(driverId: String): LiveData<List<DriverStanding>> =
         Transformations.map(standingDao.getDriverStandingsByDriver(driverId)) {
-            it.toDriverStandingList()
+            it.toDriverStandingList().sorted()
         }
 
     suspend fun refreshDriverStandingsByDriver(
@@ -103,7 +103,7 @@ class StandingRepository(val context: Context) {
 
     fun getConstructorStandingsBySeason(season: Int): LiveData<List<ConstructorStanding>> =
         Transformations.map(standingDao.getConstructorStandingsBySeason(season)) {
-            it.toConstructorStandingList()
+            it.toConstructorStandingList().sorted()
         }
 
     suspend fun refreshConstructorStandingsBySeason(
@@ -139,7 +139,7 @@ class StandingRepository(val context: Context) {
     fun getConstructorStandingsByConstructor(constructorId: String):
             LiveData<List<ConstructorStanding>> =
         Transformations.map(standingDao.getConstructorStandingsByConstructor(constructorId)) {
-            it.toConstructorStandingList()
+            it.toConstructorStandingList().sorted()
         }
 
     suspend fun refreshConstructorStandingsByConstructor(

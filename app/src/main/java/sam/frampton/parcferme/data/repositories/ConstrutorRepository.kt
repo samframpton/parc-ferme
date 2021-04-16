@@ -25,7 +25,7 @@ class ConstructorRepository(val context: Context) {
 
     fun getConstructors(season: Int): LiveData<List<Constructor>> =
         Transformations.map(constructorDao.getConstructorsBySeason(season)) {
-            it.constructors.toConstructorList()
+            it.constructors.toConstructorList().sorted()
         }
 
     suspend fun refreshConstructors(season: Int, force: Boolean = false): RefreshResult =

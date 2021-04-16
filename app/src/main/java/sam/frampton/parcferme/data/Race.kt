@@ -14,4 +14,6 @@ data class Race(
     val date: LocalDate,
     val time: LocalTime?,
     val url: String?
-) : Parcelable
+) : Comparable<Race>, Parcelable {
+    override fun compareTo(other: Race): Int = date.compareTo(other.date)
+}

@@ -22,7 +22,7 @@ class ResultRepository(val context: Context) {
 
     fun getRaceResults(season: Int, round: Int): LiveData<List<RaceResult>> =
         Transformations.map(resultDao.getRaceResultsBySeasonRound(season, round)) {
-            it.toRaceResultList()
+            it.toRaceResultList().sorted()
         }
 
     suspend fun refreshRaceResults(season: Int, round: Int, force: Boolean = false): RefreshResult =
@@ -69,7 +69,7 @@ class ResultRepository(val context: Context) {
 
     fun getQualifyingResults(season: Int, round: Int): LiveData<List<QualifyingResult>> =
         Transformations.map(resultDao.getQualifyingResultsBySeasonRound(season, round)) {
-            it.toQualifyingResultList()
+            it.toQualifyingResultList().sorted()
         }
 
     suspend fun refreshQualifyingResults(

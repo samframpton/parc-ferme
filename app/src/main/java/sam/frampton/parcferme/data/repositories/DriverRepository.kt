@@ -24,7 +24,9 @@ class DriverRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getDrivers(season: Int): LiveData<List<Driver>> =
-        Transformations.map(driverDao.getDriversBySeason(season)) { it.drivers.toDriverList() }
+        Transformations.map(driverDao.getDriversBySeason(season)) {
+            it.drivers.toDriverList().sorted()
+        }
 
     suspend fun refreshDrivers(season: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {

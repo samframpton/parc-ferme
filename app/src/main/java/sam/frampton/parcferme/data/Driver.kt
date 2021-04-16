@@ -14,4 +14,9 @@ data class Driver(
     val code: String?,
     val permanentNumber: Int?,
     val url: String?
-) : Parcelable
+) : Comparable<Driver>, Parcelable {
+    override fun compareTo(other: Driver): Int =
+        Comparator.comparing(Driver::familyName, String.CASE_INSENSITIVE_ORDER)
+            .thenComparing(Driver::givenName, String.CASE_INSENSITIVE_ORDER)
+            .compare(this, other)
+}
