@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.DriverAdapter
 import sam.frampton.parcferme.databinding.FragmentDriverListBinding
 import sam.frampton.parcferme.viewmodels.DriverListViewModel
@@ -19,6 +18,7 @@ class DriverListFragment : Fragment() {
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val driverListViewModel: DriverListViewModel by activityViewModels()
     private lateinit var binding: FragmentDriverListBinding
+    private lateinit var driverAdapter: DriverAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,13 +26,14 @@ class DriverListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDriverListBinding.inflate(layoutInflater)
-        initialiseRecyclerView()
-        initialiseSpinner()
+        setupRecyclerView()
+        setupChips()
+        setupObservers()
         return binding.root
     }
 
-    private fun initialiseRecyclerView() {
-        val driverAdapter = DriverAdapter { driver ->
+    private fun setupRecyclerView() {
+        driverAdapter = DriverAdapter { driver ->
             val directions = DriverListFragmentDirections
                 .actionDriverListFragmentToDriverDetailFragment(
                     driver,
@@ -41,45 +42,38 @@ class DriverListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvDriverListDrivers.adapter = driverAdapter
-        driverListViewModel.driverList.observe(viewLifecycleOwner) {
-            driverAdapter.submitList(it)
+    }
+
+    private fun setupChips() {
+        binding.chipDriverListSeason.setOnClickListener {
+            val directions = DriverListFragmentDirections
+                .actionDriverListFragmentToSeasonDialogFragment()
+            findNavController().navigate(directions)
         }
     }
 
-    private fun initialiseSpinner() {
-        val seasonList = ArrayList<Int>()
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, seasonList)
-        binding.spDriverListSeason.adapter = spinnerAdapter
-        binding.spDriverListSeason.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val season = parent.getItemAtPosition(position) as Int
-                    if (driverListViewModel.season != season) {
-                        driverListViewModel.setSeason(season)
-                        driverListViewModel.refreshDrivers(false)
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
-
+    private fun setupObservers() {
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
             if (seasons.isNotEmpty()) {
-                seasonList.clear()
-                seasonList.addAll(seasons)
-                spinnerAdapter.notifyDataSetChanged()
-                driverListViewModel.season?.let {
-                    binding.spDriverListSeason.setSelection(seasons.indexOf(it))
-                }
+                setSeason(driverListViewModel.season ?: seasons.first())
             }
+        }
+
+        driverListViewModel.driverList.observe(viewLifecycleOwner) {
+            driverAdapter.submitList(it)
+        }
+
+        findNavController().getBackStackEntry(R.id.driverListFragment).savedStateHandle
+            .getLiveData<Int>(SeasonDialogFragment.SEASON_KEY).observe(viewLifecycleOwner) {
+                setSeason(it)
+            }
+    }
+
+    private fun setSeason(season: Int) {
+        binding.chipDriverListSeason.text = season.toString()
+        if (driverListViewModel.season != season) {
+            driverListViewModel.setSeason(season)
+            driverListViewModel.refreshDrivers(false)
         }
     }
 }

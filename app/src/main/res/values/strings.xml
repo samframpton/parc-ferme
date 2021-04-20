@@ -15,6 +15,10 @@
         <item>Constructors</item>
     </string-array>
 
+    <string name="list_season_default">Season</string>
+    <string name="standing_list_drivers">Drivers</string>
+    <string name="standing_list_constructors">Constructors</string>
+
     <string name="season_timestamp_key">season_cache_timestamp</string>
     <string name="driver_timestamp_key">driver_cache_timestamp</string>
     <string name="constructor_timestamp_key">constructor_cache_timestamp</string>

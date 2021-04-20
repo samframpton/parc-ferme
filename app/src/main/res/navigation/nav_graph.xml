@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_driverListFragment_to_driverDetailFragment"
             app:destination="@id/driverDetailFragment" />
+        <action
+            android:id="@+id/action_driverListFragment_to_seasonDialogFragment"
+            app:destination="@id/seasonDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/driverDetailFragment"
@@ -37,6 +40,9 @@
         <action
             android:id="@+id/action_constructorListFragment_to_constructorDetailFragment"
             app:destination="@id/constructorDetailFragment" />
+        <action
+            android:id="@+id/action_constructorListFragment_to_seasonDialogFragment"
+            app:destination="@id/seasonDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/constructorDetailFragment"
@@ -61,6 +67,9 @@
         <action
             android:id="@+id/action_raceListFragment_to_raceDetailFragment"
             app:destination="@id/raceDetailFragment" />
+        <action
+            android:id="@+id/action_raceListFragment_to_seasonDialogFragment"
+            app:destination="@id/seasonDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/raceDetailFragment"
@@ -96,5 +105,12 @@
         <action
             android:id="@+id/action_standingListFragment_to_constructorDetailFragment"
             app:destination="@id/constructorDetailFragment" />
+        <action
+            android:id="@+id/action_standingListFragment_to_seasonDialogFragment"
+            app:destination="@id/seasonDialogFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/seasonDialogFragment"
+        android:name="sam.frampton.parcferme.fragments.SeasonDialogFragment"
+        tools:layout="@layout/fragment_season_dialog" />
 </navigation>

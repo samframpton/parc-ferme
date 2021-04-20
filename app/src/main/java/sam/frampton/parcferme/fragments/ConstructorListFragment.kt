@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.ConstructorAdapter
 import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
 import sam.frampton.parcferme.viewmodels.ConstructorListViewModel
@@ -19,6 +18,7 @@ class ConstructorListFragment : Fragment() {
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val constructorListViewModel: ConstructorListViewModel by activityViewModels()
     private lateinit var binding: FragmentConstructorListBinding
+    private lateinit var constructorAdapter: ConstructorAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,13 +26,14 @@ class ConstructorListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentConstructorListBinding.inflate(layoutInflater)
-        initialiseRecyclerView()
-        initialiseSpinner()
+        setupRecyclerView()
+        setupChips()
+        setupObservers()
         return binding.root
     }
 
-    private fun initialiseRecyclerView() {
-        val constructorAdapter = ConstructorAdapter { constructor ->
+    private fun setupRecyclerView() {
+        constructorAdapter = ConstructorAdapter { constructor ->
             val directions = ConstructorListFragmentDirections
                 .actionConstructorListFragmentToConstructorDetailFragment(
                     constructor,
@@ -41,45 +42,38 @@ class ConstructorListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvConstructorListConstructors.adapter = constructorAdapter
-        constructorListViewModel.constructorList.observe(viewLifecycleOwner) {
-            constructorAdapter.submitList(it)
+    }
+
+    private fun setupChips() {
+        binding.chipConstructorListSeason.setOnClickListener {
+            val directions = ConstructorListFragmentDirections
+                .actionConstructorListFragmentToSeasonDialogFragment()
+            findNavController().navigate(directions)
         }
     }
 
-    private fun initialiseSpinner() {
-        val seasonList = ArrayList<Int>()
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, seasonList)
-        binding.spConstructorListSeason.adapter = spinnerAdapter
-        binding.spConstructorListSeason.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val season = parent.getItemAtPosition(position) as Int
-                    if (constructorListViewModel.season != season) {
-                        constructorListViewModel.setSeason(season)
-                        constructorListViewModel.refreshConstructors(false)
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
-
+    private fun setupObservers() {
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
             if (seasons.isNotEmpty()) {
-                seasonList.clear()
-                seasonList.addAll(seasons)
-                spinnerAdapter.notifyDataSetChanged()
-                constructorListViewModel.season?.let {
-                    binding.spConstructorListSeason.setSelection(seasons.indexOf(it))
-                }
+                setSeason(constructorListViewModel.season ?: seasons.first())
             }
+        }
+
+        constructorListViewModel.constructorList.observe(viewLifecycleOwner) {
+            constructorAdapter.submitList(it)
+        }
+
+        findNavController().getBackStackEntry(R.id.constructorListFragment).savedStateHandle
+            .getLiveData<Int>(SeasonDialogFragment.SEASON_KEY).observe(viewLifecycleOwner) {
+                setSeason(it)
+            }
+    }
+
+    private fun setSeason(season: Int) {
+        binding.chipConstructorListSeason.text = season.toString()
+        if (constructorListViewModel.season != season) {
+            constructorListViewModel.setSeason(season)
+            constructorListViewModel.refreshConstructors(false)
         }
     }
 }
