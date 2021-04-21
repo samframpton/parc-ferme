@@ -36,7 +36,11 @@ class ConstructorAdapter(private val onClick: (Constructor) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemConstructorBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ListItemConstructorBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

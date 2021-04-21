@@ -37,7 +37,7 @@ class DriverListFragment : Fragment() {
             val directions = DriverListFragmentDirections
                 .actionDriverListFragmentToDriverDetailFragment(
                     driver,
-                    "${driver.givenName} ${driver.familyName}"
+                    getString(R.string.driver_full_name, driver.givenName, driver.familyName)
                 )
             findNavController().navigate(directions)
         }
