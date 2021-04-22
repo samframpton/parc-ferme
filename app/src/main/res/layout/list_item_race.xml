@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,61 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingTop="8dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/tv_list_item_race"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{race.raceName}"
+        <ImageView
+            android:id="@+id/iv_list_item_race_flag"
+            style="@style/FlagIcon"
+            android:contentDescription="@null"
+            app:country="@{race.circuit.country}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_be" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:text="@{race.raceName}"
+            android:textSize="16sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_race_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_race_date"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Belgian Grand Prix" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_circuit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:singleLine="true"
+            android:text="@{race.circuit.circuitName}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_race_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_race_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_race_name"
+            tools:text="Circuit de Spa-Francorchamps" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:date="@{race.date}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Aug 29" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

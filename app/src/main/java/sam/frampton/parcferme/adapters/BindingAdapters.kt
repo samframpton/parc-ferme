@@ -1,20 +1,13 @@
 package sam.frampton.parcferme.adapters
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.data.Driver
-
-@BindingAdapter("driver")
-fun TextView.setDriver(driver: Driver) {
-    this.text =
-        this.context.getString(
-            R.string.driver_full_name,
-            driver.givenName,
-            driver.familyName
-        )
-}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 private val countryFlags = mapOf(
     "Australia" to R.drawable.ic_au,
@@ -28,8 +21,10 @@ private val countryFlags = mapOf(
     "France" to R.drawable.ic_fr,
     "Germany" to R.drawable.ic_de,
     "Hungary" to R.drawable.ic_hu,
+    "India" to R.drawable.ic_in,
     "Italy" to R.drawable.ic_it,
     "Japan" to R.drawable.ic_jp,
+    "Korea" to R.drawable.ic_kr,
     "Malaysia" to R.drawable.ic_my,
     "Mexico" to R.drawable.ic_mx,
     "Monaco" to R.drawable.ic_mc,
@@ -39,6 +34,7 @@ private val countryFlags = mapOf(
     "Saudi Arabia" to R.drawable.ic_sa,
     "Singapore" to R.drawable.ic_sg,
     "Spain" to R.drawable.ic_es,
+    "Turkey" to R.drawable.ic_tr,
     "UAE" to R.drawable.ic_ae,
     "UK" to R.drawable.ic_gb,
     "USA" to R.drawable.ic_us
@@ -74,8 +70,38 @@ private val nationalityFlags = mapOf(
     "Venezuelan" to R.drawable.ic_ve
 )
 
+@BindingAdapter("driverName")
+fun TextView.setDriverName(driver: Driver) {
+    this.text =
+        this.context.getString(
+            R.string.driver_full_name,
+            driver.givenName,
+            driver.familyName
+        )
+}
+
+@BindingAdapter("driverNumber")
+fun TextView.setDriverNumber(driver: Driver) {
+    this.visibility =
+        driver.permanentNumber?.let {
+            this.text = it.toString()
+            View.VISIBLE
+        } ?: View.GONE
+}
+
+@BindingAdapter("country")
+fun ImageView.setCountry(country: String) {
+    this.setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
+    this.contentDescription = country
+}
+
 @BindingAdapter("nationality")
 fun ImageView.setNationality(nationality: String) {
     this.setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
     this.contentDescription = nationality
+}
+
+@BindingAdapter("date")
+fun TextView.setDate(date: LocalDate) {
+    this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
 }
