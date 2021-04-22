@@ -12,7 +12,8 @@ class DriverStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
     ListAdapter<DriverStanding, DriverStandingAdapter.ViewHolder>(DiffCallback) {
 
     inner class ViewHolder(
-        private val binding: ListItemDriverStandingBinding) :
+        private val binding: ListItemDriverStandingBinding
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         private var driverStanding: DriverStanding? = null
 
@@ -38,7 +39,11 @@ class DriverStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ListItemDriverStandingBinding.inflate(LayoutInflater.from(parent.context))
+            ListItemDriverStandingBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return ViewHolder(binding)
     }
 

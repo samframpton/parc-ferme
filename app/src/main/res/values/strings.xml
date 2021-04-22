@@ -17,6 +17,9 @@
 
     <string name="driver_full_name">%1$s %2$s</string>
 
+    <string name="standing_points">%1$s Points</string>
+    <string name="standing_wins">%1$s Wins</string>
+
     <string name="list_season_default">Season</string>
     <string name="standing_list_drivers">Drivers</string>
     <string name="standing_list_constructors">Constructors</string>

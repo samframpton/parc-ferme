@@ -1,13 +1,16 @@
 package sam.frampton.parcferme.adapters
 
+import android.text.TextPaint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import sam.frampton.parcferme.R
+import sam.frampton.parcferme.data.Constructor
 import sam.frampton.parcferme.data.Driver
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 
 private val countryFlags = mapOf(
     "Australia" to R.drawable.ic_au,
@@ -70,6 +73,18 @@ private val nationalityFlags = mapOf(
     "Venezuelan" to R.drawable.ic_ve
 )
 
+@BindingAdapter("country")
+fun ImageView.setCountry(country: String) {
+    this.setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
+    this.contentDescription = country
+}
+
+@BindingAdapter("nationality")
+fun ImageView.setNationality(nationality: String) {
+    this.setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
+    this.contentDescription = nationality
+}
+
 @BindingAdapter("driverName")
 fun TextView.setDriverName(driver: Driver) {
     this.text =
@@ -82,6 +97,10 @@ fun TextView.setDriverName(driver: Driver) {
 
 @BindingAdapter("driverNumber")
 fun TextView.setDriverNumber(driver: Driver) {
+    this.minWidth = TextPaint().let {
+        it.textSize = this.textSize
+        it.measureText("00").toInt()
+    }
     this.visibility =
         driver.permanentNumber?.let {
             this.text = it.toString()
@@ -89,17 +108,42 @@ fun TextView.setDriverNumber(driver: Driver) {
         } ?: View.GONE
 }
 
-@BindingAdapter("country")
-fun ImageView.setCountry(country: String) {
-    this.setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
-    this.contentDescription = country
+@BindingAdapter("position")
+fun TextView.setPosition(position: Int) {
+    this.minWidth = TextPaint().let {
+        it.textSize = this.textSize
+        it.measureText("00").toInt()
+    }
+    this.text = position.toString()
 }
 
-@BindingAdapter("nationality")
-fun ImageView.setNationality(nationality: String) {
-    this.setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
-    this.contentDescription = nationality
+@BindingAdapter("constructors")
+fun TextView.setConstructors(constructors: List<Constructor>) {
+    this.text = constructors.map(Constructor::name).joinToString()
 }
+
+@BindingAdapter("points")
+fun TextView.setPoints(points: Double) {
+    this.minWidth = TextPaint().let {
+        it.textSize = this.textSize
+        it.measureText("Points: 000").toInt()
+    }
+    this.text =
+        this.context.getString(
+            R.string.standing_points,
+            if (points.rem(1) == 0.0) {
+                (points.toInt())
+            } else {
+                points
+            }.toString()
+        )
+}
+
+@BindingAdapter("wins")
+fun TextView.setWins(wins: Int) {
+    this.text = this.context.getString(R.string.standing_wins, wins.toString())
+}
+
 
 @BindingAdapter("date")
 fun TextView.setDate(date: LocalDate) {

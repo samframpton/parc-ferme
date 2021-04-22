@@ -26,7 +26,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:nationality="@{constructor.nationality}"
-            tools:src="@drawable/ic_it" />
+            tools:src="@drawable/ic_fr" />
 
         <TextView
             android:id="@+id/tv_list_item_constructor_name"
@@ -39,6 +39,6 @@
             app:layout_constraintLeft_toRightOf="@id/iv_list_item_constructor_flag"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlHardcoded"
-            tools:text="Ferrari" />
+            tools:text="Renault" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

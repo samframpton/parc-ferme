@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,72 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:paddingTop="8dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/tv_list_item_constructor_season_standing"
+            android:id="@+id/tv_list_item_constructor_standing_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{constructorStanding.position + ` ` + constructorStanding.constructor.name}"
+            android:gravity="center"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:position="@{constructorStanding.position}"
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/iv_list_item_constructor_standing_flag"
+            style="@style/FlagIcon"
+            android:layout_marginLeft="24dp"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_constructor_standing_position"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nationality="@{constructorStanding.constructor.nationality}"
+            tools:ignore="RtlHardcoded"
+            tools:src="@drawable/ic_fr" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_standing_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:singleLine="true"
+            android:text="@{constructorStanding.constructor.name}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_constructor_standing_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_constructor_standing_points"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Renault" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_standing_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_list_item_constructor_standing_wins"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:points="@{constructorStanding.points}"
+            tools:text="152 points" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_standing_wins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/tv_list_item_constructor_standing_points"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_constructor_standing_points"
+            app:wins="@{constructorStanding.wins}"
+            tools:text="7 Wins" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
