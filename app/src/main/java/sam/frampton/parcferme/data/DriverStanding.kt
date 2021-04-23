@@ -7,6 +7,4 @@ data class DriverStanding(
     val driver: Driver,
     val constructors: List<Constructor>,
     val season: Int
-) : Comparable<DriverStanding> {
-    override fun compareTo(other: DriverStanding): Int = position.compareTo(other.position)
-}
+)

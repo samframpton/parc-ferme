@@ -24,8 +24,8 @@ class ConstructorRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getConstructors(season: Int): LiveData<List<Constructor>> =
-        Transformations.map(constructorDao.getConstructorsBySeason(season)) {
-            it.constructors.toConstructorList().sorted()
+        Transformations.map(constructorDao.getConstructorsBySeason(season)) { swc ->
+            swc.constructors.toConstructorList().sortedBy { it.name }
         }
 
     suspend fun refreshConstructors(season: Int, force: Boolean = false): RefreshResult =

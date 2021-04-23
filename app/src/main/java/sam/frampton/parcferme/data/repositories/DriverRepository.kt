@@ -25,7 +25,10 @@ class DriverRepository(val context: Context) {
 
     fun getDrivers(season: Int): LiveData<List<Driver>> =
         Transformations.map(driverDao.getDriversBySeason(season)) {
-            it.drivers.toDriverList().sorted()
+            val comparator =
+                Comparator.comparing(Driver::familyName, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Driver::givenName, String.CASE_INSENSITIVE_ORDER)
+            it.drivers.toDriverList().sortedWith(comparator)
         }
 
     suspend fun refreshDrivers(season: Int, force: Boolean = false): RefreshResult =

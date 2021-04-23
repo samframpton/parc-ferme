@@ -21,8 +21,8 @@ class StandingRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getDriverStandingsBySeason(season: Int): LiveData<List<DriverStanding>> =
-        Transformations.map(standingDao.getDriverStandingsBySeason(season)) {
-            it.toDriverStandingList().sorted()
+        Transformations.map(standingDao.getDriverStandingsBySeason(season)) { standings ->
+            standings.toDriverStandingList().sortedBy { it.position }
         }
 
     suspend fun refreshDriverStandingsBySeason(season: Int, force: Boolean = false): RefreshResult =
@@ -53,8 +53,8 @@ class StandingRepository(val context: Context) {
         }
 
     fun getDriverStandingsByDriver(driverId: String): LiveData<List<DriverStanding>> =
-        Transformations.map(standingDao.getDriverStandingsByDriver(driverId)) {
-            it.toDriverStandingList().sorted()
+        Transformations.map(standingDao.getDriverStandingsByDriver(driverId)) { standings ->
+            standings.toDriverStandingList().sortedByDescending { it.season }
         }
 
     suspend fun refreshDriverStandingsByDriver(
@@ -102,8 +102,8 @@ class StandingRepository(val context: Context) {
         } ?: RefreshResult.OTHER_ERROR
 
     fun getConstructorStandingsBySeason(season: Int): LiveData<List<ConstructorStanding>> =
-        Transformations.map(standingDao.getConstructorStandingsBySeason(season)) {
-            it.toConstructorStandingList().sorted()
+        Transformations.map(standingDao.getConstructorStandingsBySeason(season)) { standings ->
+            standings.toConstructorStandingList().sortedBy { it.position }
         }
 
     suspend fun refreshConstructorStandingsBySeason(
@@ -138,8 +138,10 @@ class StandingRepository(val context: Context) {
 
     fun getConstructorStandingsByConstructor(constructorId: String):
             LiveData<List<ConstructorStanding>> =
-        Transformations.map(standingDao.getConstructorStandingsByConstructor(constructorId)) {
-            it.toConstructorStandingList().sorted()
+        Transformations.map(
+            standingDao.getConstructorStandingsByConstructor(constructorId)
+        ) { standings ->
+            standings.toConstructorStandingList().sortedByDescending { it.season }
         }
 
     suspend fun refreshConstructorStandingsByConstructor(

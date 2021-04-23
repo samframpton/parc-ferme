@@ -21,8 +21,8 @@ class ResultRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getRaceResults(season: Int, round: Int): LiveData<List<RaceResult>> =
-        Transformations.map(resultDao.getRaceResultsBySeasonRound(season, round)) {
-            it.toRaceResultList().sorted()
+        Transformations.map(resultDao.getRaceResultsBySeasonRound(season, round)) { results ->
+            results.toRaceResultList().sortedBy { it.position }
         }
 
     suspend fun refreshRaceResults(season: Int, round: Int, force: Boolean = false): RefreshResult =
@@ -68,8 +68,8 @@ class ResultRepository(val context: Context) {
         } ?: RefreshResult.OTHER_ERROR
 
     fun getQualifyingResults(season: Int, round: Int): LiveData<List<QualifyingResult>> =
-        Transformations.map(resultDao.getQualifyingResultsBySeasonRound(season, round)) {
-            it.toQualifyingResultList().sorted()
+        Transformations.map(resultDao.getQualifyingResultsBySeasonRound(season, round)) { results ->
+            results.toQualifyingResultList().sortedBy { it.position }
         }
 
     suspend fun refreshQualifyingResults(

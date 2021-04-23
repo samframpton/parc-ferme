@@ -17,6 +17,4 @@ data class RaceResult(
     val fastestLapTime: String?,
     val fastestLapAverageSpeed: Double?,
     val fastestLapAverageSpeedUnits: String?
-) : Comparable<RaceResult> {
-    override fun compareTo(other: RaceResult): Int = position.compareTo(other.position)
-}
+)

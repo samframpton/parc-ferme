@@ -8,6 +8,4 @@ data class QualifyingResult(
     val q1: String?,
     val q2: String?,
     val q3: String?
-) : Comparable<QualifyingResult> {
-    override fun compareTo(other: QualifyingResult): Int = position.compareTo(other.position)
-}
+)

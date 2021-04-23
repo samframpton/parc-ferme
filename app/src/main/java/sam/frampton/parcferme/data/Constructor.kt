@@ -9,6 +9,4 @@ data class Constructor(
     val name: String,
     val nationality: String,
     val url: String?
-) : Comparable<Constructor>, Parcelable {
-    override fun compareTo(other: Constructor): Int = name.compareTo(other.name, true)
-}
+) : Parcelable

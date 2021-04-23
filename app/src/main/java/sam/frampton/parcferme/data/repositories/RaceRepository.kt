@@ -21,7 +21,9 @@ class RaceRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getRaces(season: Int): LiveData<List<Race>> =
-        Transformations.map(raceDao.getRacesBySeason(season)) { it.toRaceList().sorted() }
+        Transformations.map(raceDao.getRacesBySeason(season)) { races ->
+            races.toRaceList().sortedBy { it.date }
+        }
 
     suspend fun refreshRaces(season: Int, force: Boolean = false): RefreshResult =
         withContext(Dispatchers.IO) {
