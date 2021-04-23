@@ -12,6 +12,6 @@ interface SeasonDao {
     @Query("SELECT * FROM seasons ORDER BY season DESC")
     fun getSeasons(): LiveData<List<SeasonEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSeasons(seasons: List<SeasonEntity>)
 }

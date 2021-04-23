@@ -20,7 +20,7 @@ abstract class ConstructorDao {
         )
     }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract fun insertConstructors(constructors: List<ConstructorEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

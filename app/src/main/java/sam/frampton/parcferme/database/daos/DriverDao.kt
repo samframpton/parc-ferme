@@ -25,7 +25,7 @@ abstract class DriverDao {
         )
     }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract fun insertDrivers(drivers: List<DriverEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
