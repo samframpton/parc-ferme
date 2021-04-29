@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,62 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium">
 
         <TextView
-            android:id="@+id/tv_list_item_constructor_detail_standing"
+            android:id="@+id/tv_list_item_constructor_detail_standing_season"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{constructorStanding.season + ` Position:` + constructorStanding.position + ` Points:` + constructorStanding.points}"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:season="@{constructorStanding.season}"
+            tools:text="1998" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_detail_standing_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_constructor_detail_standing_season"
+            app:layout_constraintTop_toTopOf="parent"
+            app:position="@{constructorStanding.position}"
+            tools:ignore="RtlHardcoded"
+            tools:text="1st" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_detail_standing_wins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_constructor_detail_standing_position"
+            app:layout_constraintTop_toTopOf="parent"
+            app:wins="@{constructorStanding.wins}"
+            tools:ignore="RtlHardcoded"
+            tools:text="9 Wins" />
+
+        <TextView
+            android:id="@+id/tv_list_item_constructor_detail_standing_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_constructor_detail_standing_wins"
+            app:layout_constraintTop_toTopOf="parent"
+            app:points="@{constructorStanding.points}"
+            tools:ignore="RtlHardcoded"
+            tools:text="156 points" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

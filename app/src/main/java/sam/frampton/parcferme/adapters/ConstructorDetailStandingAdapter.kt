@@ -39,7 +39,11 @@ class ConstructorDetailStandingAdapter(private val onClick: (ConstructorStanding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ListItemConstructorDetailStandingBinding.inflate(LayoutInflater.from(parent.context))
+            ListItemConstructorDetailStandingBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return ViewHolder(binding)
     }
 
