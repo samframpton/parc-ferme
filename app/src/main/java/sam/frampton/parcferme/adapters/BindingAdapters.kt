@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.data.Constructor
+import sam.frampton.parcferme.data.ConstructorStanding
 import sam.frampton.parcferme.data.Driver
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -112,9 +113,25 @@ fun TextView.setDriverNumber(driver: Driver) {
 fun TextView.setPosition(position: Int) {
     this.minWidth = TextPaint().let {
         it.textSize = this.textSize
-        it.measureText("00").toInt()
+        val widestText = this.context.getString(R.string.ordinal_other, 88)
+        it.measureText(widestText).toInt()
     }
-    this.text = position.toString()
+    this.text =
+        if (position > 10 && position.toString().let { it[it.length - 2] == '1' }) {
+            this.context.getString(R.string.ordinal_other, position)
+        } else {
+            when (position.toString().last()) {
+                '1' -> this.context.getString(R.string.ordinal_one, position)
+                '2' -> this.context.getString(R.string.ordinal_two, position)
+                '3' -> this.context.getString(R.string.ordinal_three, position)
+                else -> this.context.getString(R.string.ordinal_other, position)
+            }
+        }
+}
+
+@BindingAdapter("season")
+fun TextView.setSeason(season: Int) {
+    this.text = season.toString()
 }
 
 @BindingAdapter("constructors")
@@ -126,11 +143,12 @@ fun TextView.setConstructors(constructors: List<Constructor>) {
 fun TextView.setPoints(points: Double) {
     this.minWidth = TextPaint().let {
         it.textSize = this.textSize
-        it.measureText("Points: 000").toInt()
+        val widestText = this.context.getString(R.string.points, "888.5")
+        it.measureText(widestText).toInt()
     }
     this.text =
         this.context.getString(
-            R.string.standing_points,
+            R.string.points,
             if (points.rem(1) == 0.0) {
                 (points.toInt())
             } else {
@@ -141,11 +159,30 @@ fun TextView.setPoints(points: Double) {
 
 @BindingAdapter("wins")
 fun TextView.setWins(wins: Int) {
-    this.text = this.context.getString(R.string.standing_wins, wins.toString())
+    this.minWidth = TextPaint().let {
+        it.textSize = this.textSize
+        val widestText =
+            this.context.resources.getQuantityString(R.plurals.wins, 88, 88)
+        it.measureText(widestText).toInt()
+    }
+    this.text = this.context.resources.getQuantityString(R.plurals.wins, wins, wins)
 }
-
 
 @BindingAdapter("date")
 fun TextView.setDate(date: LocalDate) {
     this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
+}
+
+@BindingAdapter("constructorTitles")
+fun TextView.setConstructorTitles(constructorStandings: List<ConstructorStanding>?) {
+    this.text = constructorStandings?.count { it.position == 1 }?.let {
+        this.context.getString(R.string.titles, it)
+    } ?: ""
+}
+
+@BindingAdapter("constructorWins")
+fun TextView.setConstructorWins(constructorStandings: List<ConstructorStanding>?) {
+    this.text = constructorStandings?.sumOf { it.wins }?.let {
+        this.context.resources.getQuantityString(R.plurals.wins, it, it)
+    } ?: ""
 }
