@@ -37,7 +37,11 @@ class DriverDetailStandingAdapter(private val onClick: (DriverStanding) -> Unit)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ListItemDriverDetailStandingBinding.inflate(LayoutInflater.from(parent.context))
+            ListItemDriverDetailStandingBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return ViewHolder(binding)
     }
 

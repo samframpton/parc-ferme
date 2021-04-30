@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,74 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium">
 
         <TextView
-            android:id="@+id/tv_list_item_driver_detail_standing"
+            android:id="@+id/tv_list_item_driver_detail_standing_season"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{driverStanding.season + ` Position:` + driverStanding.position + ` Points:` + driverStanding.points}"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:season="@{driverStanding.season}"
+            tools:text="2005" />
+
+        <TextView
+            android:id="@+id/tv_list_item_driver_detail_standing_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_driver_detail_standing_season"
+            app:layout_constraintTop_toTopOf="parent"
+            app:position="@{driverStanding.position}"
+            tools:ignore="RtlHardcoded"
+            tools:text="1st" />
+
+        <TextView
+            android:id="@+id/tv_list_item_driver_detail_standing_constructors"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:singleLine="true"
+            android:textSize="@dimen/text_large"
+            app:constructors="@{driverStanding.constructors}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_driver_detail_standing_position"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_driver_detail_standing_points"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Renault" />
+
+        <TextView
+            android:id="@+id/tv_list_item_driver_detail_standing_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toTopOf="@id/tv_list_item_driver_detail_standing_wins"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:points="@{driverStanding.points}"
+            tools:text="133 Points" />
+
+        <TextView
+            android:id="@+id/tv_list_item_driver_detail_standing_wins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/tv_list_item_driver_detail_standing_points"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_driver_detail_standing_points"
+            app:wins="@{driverStanding.wins}"
+            tools:text="7 Wins" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
