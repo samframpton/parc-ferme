@@ -12,6 +12,8 @@
     </string-array>
 
     <string name="driver_full_name">%1$s %2$s</string>
+    <string name="driver_full_name_and_number">%1$d. %2$s %3$s</string>
+    <string name="birth_date">Born %1$s</string>
 
     <string name="points">%1$s Points</string>
     <plurals name="wins">
@@ -28,7 +30,7 @@
     <string name="standing_list_drivers">Drivers</string>
     <string name="standing_list_constructors">Constructors</string>
 
-    <string name="titles">%1$d Titles</string>
+    <string name="championships">%1$d Championships</string>
 
     <string name="season_timestamp_key">season_cache_timestamp</string>
     <string name="driver_timestamp_key">driver_cache_timestamp</string>

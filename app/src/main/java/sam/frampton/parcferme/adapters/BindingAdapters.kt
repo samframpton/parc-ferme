@@ -9,8 +9,10 @@ import sam.frampton.parcferme.R
 import sam.frampton.parcferme.data.Constructor
 import sam.frampton.parcferme.data.ConstructorStanding
 import sam.frampton.parcferme.data.Driver
+import sam.frampton.parcferme.data.DriverStanding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 private val countryFlags = mapOf(
@@ -173,10 +175,32 @@ fun TextView.setDate(date: LocalDate) {
     this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
 }
 
-@BindingAdapter("constructorTitles")
-fun TextView.setConstructorTitles(constructorStandings: List<ConstructorStanding>?) {
+@BindingAdapter("driverChampionships")
+fun TextView.setDriverChampionships(driverStandings: List<DriverStanding>?) {
+    this.text = driverStandings?.count { it.position == 1 }?.let {
+        this.context.getString(R.string.championships, it)
+    } ?: ""
+}
+
+@BindingAdapter("driverWins")
+fun TextView.setDriverWins(driverStandings: List<DriverStanding>?) {
+    this.text = driverStandings?.sumOf { it.wins }?.let {
+        this.context.resources.getQuantityString(R.plurals.wins, it, it)
+    } ?: ""
+}
+
+@BindingAdapter("birthDate")
+fun TextView.setBirthDate(birthDate: LocalDate) {
+    this.text = this.context.getString(
+        R.string.birth_date,
+        birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+    )
+}
+
+@BindingAdapter("constructorChampionships")
+fun TextView.setConstructorChampionships(constructorStandings: List<ConstructorStanding>?) {
     this.text = constructorStandings?.count { it.position == 1 }?.let {
-        this.context.getString(R.string.titles, it)
+        this.context.getString(R.string.championships, it)
     } ?: ""
 }
 
