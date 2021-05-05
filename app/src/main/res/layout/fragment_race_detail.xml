@@ -15,43 +15,122 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_race_detail_season"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{race.season + ``}"
+        <ImageView
+            android:id="@+id/iv_race_detail_flag"
+            style="@style/FlagIcon"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:contentDescription="@null"
+            app:country="@{race.circuit.country}"
+            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_race_detail_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{race.raceName}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_season" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded"
+            tools:src="@drawable/ic_at" />
 
         <TextView
             android:id="@+id/tv_race_detail_circuit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{race.circuit.circuitName}"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_race_detail_flag"
+            app:layout_constraintRight_toLeftOf="@id/barrier_race_detail_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Red Bull Ring" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_race_detail_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{race.circuit.circuitName}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_name" />
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="tv_race_detail_date, tv_race_detail_time" />
 
-        <Spinner
-            android:id="@+id/sp_race_detail_result_type"
+        <TextView
+            android:id="@+id/tv_race_detail_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_large"
+            android:textSize="@dimen/text_large"
+            app:dateFull="@{race.date}"
+            app:layout_constraintBottom_toTopOf="@id/tv_race_detail_time"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/barrier_race_detail_vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginBottom="@dimen/margin_medium"
+            tools:ignore="RtlHardcoded"
+            tools:text="05/07/2020" />
+
+        <TextView
+            android:id="@+id/tv_race_detail_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/barrier_race_detail_vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_date"
+            app:timeFull="@{race.time}"
+            tools:ignore="RtlHardcoded"
+            tools:text="13.10 (UTC)" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_race_detail_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_race_detail_flag, tv_race_detail_circuit, tv_race_detail_time" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_race_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/result_type"
-            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_circuit" />
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_medium"
+            app:checkedChip="@id/chip_race_detail_race"
+            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_time"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_race_detail_race"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/race" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_race_detail_qualifying"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qualifying" />
+        </com.google.android.material.chip.ChipGroup>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_race_detail_results"
+            android:id="@+id/rv_race_detail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sp_race_detail_result_type" />
+            app:layout_constraintTop_toBottomOf="@id/chip_group_race_detail" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

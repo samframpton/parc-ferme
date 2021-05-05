@@ -38,7 +38,11 @@ class QualifyingResultAdapter(private val onClick: (QualifyingResult) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemQualifyingResultBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ListItemQualifyingResultBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

@@ -11,9 +11,15 @@
         <item>Qualifying</item>
     </string-array>
 
+    <string name="race">Race</string>
+    <string name="qualifying">Qualifying</string>
+
+    <string name="no_time">No Time</string>
+
     <string name="driver_full_name">%1$s %2$s</string>
     <string name="driver_full_name_and_number">%1$d. %2$s %3$s</string>
     <string name="birth_date">Born %1$s</string>
+    <string name="time_full">%1$s (UTC)</string>
 
     <string name="points">%1$s Points</string>
     <plurals name="wins">
