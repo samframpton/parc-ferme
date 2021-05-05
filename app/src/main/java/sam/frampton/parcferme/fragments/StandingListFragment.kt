@@ -89,10 +89,10 @@ class StandingListFragment : Fragment() {
         standingListViewModel.standingType = standingType
         when (standingType) {
             DRIVER, DEFAULT -> {
-                binding.rvStandingListStandings.adapter = driverAdapter
+                binding.rvStandingList.adapter = driverAdapter
             }
             CONSTRUCTOR -> {
-                binding.rvStandingListStandings.adapter = constructorAdapter
+                binding.rvStandingList.adapter = constructorAdapter
             }
         }
     }

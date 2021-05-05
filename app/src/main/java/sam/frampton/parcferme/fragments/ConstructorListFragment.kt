@@ -41,7 +41,7 @@ class ConstructorListFragment : Fragment() {
                 )
             findNavController().navigate(directions)
         }
-        binding.rvConstructorListConstructors.adapter = constructorAdapter
+        binding.rvConstructorList.adapter = constructorAdapter
     }
 
     private fun setupChips() {

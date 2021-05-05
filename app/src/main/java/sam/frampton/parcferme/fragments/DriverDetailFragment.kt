@@ -42,7 +42,7 @@ class DriverDetailFragment : Fragment() {
                 )
             findNavController().navigate(action)
         }
-        binding.rvDriverDetailStandings.adapter = driverAdapter
+        binding.rvDriverDetail.adapter = driverAdapter
         val dividerAttrs = intArrayOf(android.R.attr.listDivider)
         val styledAttrs = requireContext().obtainStyledAttributes(dividerAttrs)
         val divider = styledAttrs.getDrawable(0)
@@ -51,7 +51,7 @@ class DriverDetailFragment : Fragment() {
         styledAttrs.recycle()
         val dividerDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         dividerDecoration.setDrawable(insetDivider)
-        binding.rvDriverDetailStandings.addItemDecoration(dividerDecoration)
+        binding.rvDriverDetail.addItemDecoration(dividerDecoration)
     }
 
     private fun setupObservers() {

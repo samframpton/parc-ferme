@@ -38,7 +38,7 @@ class RaceListFragment : Fragment() {
                 .actionRaceListFragmentToRaceDetailFragment(race, race.raceName)
             findNavController().navigate(directions)
         }
-        binding.rvRaceListRaces.adapter = raceAdapter
+        binding.rvRaceList.adapter = raceAdapter
     }
 
     private fun setupChips() {

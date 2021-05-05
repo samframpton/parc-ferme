@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small"
         android:paddingRight="@dimen/margin_large"
-        android:paddingBottom="@dimen/margin_medium">
+        android:paddingBottom="@dimen/margin_small">
 
         <TextView
             android:id="@+id/tv_list_item_driver_detail_standing_season"
@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
-            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_large"
             app:constructors="@{driverStanding.constructors}"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -76,42 +76,38 @@ private val nationalityFlags = mapOf(
 
 @BindingAdapter("country")
 fun ImageView.setCountry(country: String) {
-    this.setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
-    this.contentDescription = country
+    setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
+    contentDescription = country
 }
 
 @BindingAdapter("nationality")
 fun ImageView.setNationality(nationality: String) {
-    this.setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
-    this.contentDescription = nationality
+    setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
+    contentDescription = nationality
 }
 
 @BindingAdapter("season")
 fun TextView.setSeason(season: Int) {
-    this.text = season.toString()
+    text = season.toString()
 }
 
 @BindingAdapter("driverName")
 fun TextView.setDriverName(driver: Driver) {
-    this.text = this.context.getString(
-        R.string.driver_full_name,
-        driver.givenName,
-        driver.familyName
-    )
+    text = context.getString(R.string.driver_full_name, driver.givenName, driver.familyName)
 }
 
 @BindingAdapter("driverNumber")
 fun TextView.setDriverNumber(driver: Driver) {
-    this.minWidth = measureText(this, "88")
-    this.visibility = driver.permanentNumber?.let {
-        this.text = it.toString()
+    visibility = driver.permanentNumber?.let {
+        minWidth = measureText(this, "88")
+        text = it.toString()
         View.VISIBLE
     } ?: View.GONE
 }
 
 @BindingAdapter("birthDate")
 fun TextView.setBirthDate(birthDate: LocalDate) {
-    this.text = this.context.getString(
+    text = context.getString(
         R.string.birth_date,
         birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
     )
@@ -119,92 +115,88 @@ fun TextView.setBirthDate(birthDate: LocalDate) {
 
 @BindingAdapter("driverChampionships")
 fun TextView.setDriverChampionships(driverStandings: List<DriverStanding>?) {
-    this.text = driverStandings?.count { it.position == 1 }?.let {
-        this.context.getString(R.string.championships, it)
+    text = driverStandings?.count { it.position == 1 }?.let {
+        context.getString(R.string.championships, it)
     } ?: ""
 }
 
 @BindingAdapter("driverWins")
 fun TextView.setDriverWins(driverStandings: List<DriverStanding>?) {
-    this.text = driverStandings?.sumOf { it.wins }?.let {
-        this.context.resources.getQuantityString(R.plurals.wins, it, it)
+    text = driverStandings?.sumOf { it.wins }?.let {
+        context.resources.getQuantityString(R.plurals.wins, it, it)
     } ?: ""
 }
 
 @BindingAdapter("constructors")
 fun TextView.setConstructors(constructors: List<Constructor>) {
-    this.text = constructors.map(Constructor::name).joinToString()
+    text = constructors.map(Constructor::name).joinToString()
 }
 
 @BindingAdapter("constructorChampionships")
 fun TextView.setConstructorChampionships(constructorStandings: List<ConstructorStanding>?) {
-    this.text = constructorStandings?.count { it.position == 1 }?.let {
-        this.context.getString(R.string.championships, it)
+    text = constructorStandings?.count { it.position == 1 }?.let {
+        context.getString(R.string.championships, it)
     } ?: ""
 }
 
 @BindingAdapter("constructorWins")
 fun TextView.setConstructorWins(constructorStandings: List<ConstructorStanding>?) {
-    this.text = constructorStandings?.sumOf { it.wins }?.let {
-        this.context.resources.getQuantityString(R.plurals.wins, it, it)
+    text = constructorStandings?.sumOf { it.wins }?.let {
+        context.resources.getQuantityString(R.plurals.wins, it, it)
     } ?: ""
 }
 
 @BindingAdapter("position")
 fun TextView.setPosition(position: Int) {
-    this.minWidth =
-        measureText(this, this.context.getString(R.string.ordinal_other, 88))
-    this.text =
-        if (position > 10 && position.toString().let { it[it.length - 2] == '1' }) {
-            this.context.getString(R.string.ordinal_other, position)
-        } else {
-            when (position.toString().last()) {
-                '1' -> this.context.getString(R.string.ordinal_one, position)
-                '2' -> this.context.getString(R.string.ordinal_two, position)
-                '3' -> this.context.getString(R.string.ordinal_three, position)
-                else -> this.context.getString(R.string.ordinal_other, position)
-            }
+    minWidth = measureText(this, context.getString(R.string.ordinal_other, 88))
+    text = if (position > 10 && position.toString().let { it[it.length - 2] == '1' }) {
+        context.getString(R.string.ordinal_other, position)
+    } else {
+        when (position.toString().last()) {
+            '1' -> context.getString(R.string.ordinal_one, position)
+            '2' -> context.getString(R.string.ordinal_two, position)
+            '3' -> context.getString(R.string.ordinal_three, position)
+            else -> context.getString(R.string.ordinal_other, position)
         }
+    }
 }
 
 @BindingAdapter("points")
 fun TextView.setPoints(points: Double) {
-    this.minWidth =
-        measureText(this, this.context.getString(R.string.points, "888.5"))
-    this.text =
-        this.context.getString(
-            R.string.points,
-            if (points.rem(1) == 0.0) {
-                (points.toInt())
-            } else {
-                points
-            }.toString()
-        )
+    minWidth = measureText(this, context.getString(R.string.points, "888.5"))
+    text = context.getString(
+        R.string.points,
+        if (points.rem(1) == 0.0) {
+            (points.toInt())
+        } else {
+            points
+        }.toString()
+    )
 }
 
 @BindingAdapter("wins")
 fun TextView.setWins(wins: Int) {
-    this.minWidth = measureText(
+    minWidth = measureText(
         this,
-        this.context.resources.getQuantityString(R.plurals.wins, 88, 88)
+        context.resources.getQuantityString(R.plurals.wins, 88, 88)
     )
-    this.text = this.context.resources.getQuantityString(R.plurals.wins, wins, wins)
+    text = context.resources.getQuantityString(R.plurals.wins, wins, wins)
 }
 
 @BindingAdapter("dateShort")
 fun TextView.setDateShort(date: LocalDate) {
-    this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
+    text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
 }
 
 @BindingAdapter("dateFull")
 fun TextView.setDateFull(date: LocalDate) {
-    this.text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+    text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
 }
 
 @BindingAdapter("timeFull")
 fun TextView.setTimeFull(time: LocalTime?) {
-    this.visibility = time?.let {
-        this.text = this.context.getString(
+    visibility = time?.let {
+        text = context.getString(
             R.string.time_full,
             time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
         )
@@ -214,28 +206,26 @@ fun TextView.setTimeFull(time: LocalTime?) {
 
 @BindingAdapter("raceTime")
 fun TextView.setRaceTime(raceResult: RaceResult) {
-    this.width = measureText(this, "8:88:88.888")
-    this.text =
-        if (!raceResult.time.isNullOrEmpty()) {
-            raceResult.time
-        } else {
-            raceResult.status
-        }
+    width = measureText(this, "8:88:88.888")
+    text = if (!raceResult.time.isNullOrEmpty()) {
+        raceResult.time
+    } else {
+        raceResult.status
+    }
 }
 
 @BindingAdapter("qualifyingTime")
 fun TextView.setQualifyingTime(qualifyingResult: QualifyingResult) {
-    this.width = measureText(this, "8:88.888")
-    this.text =
-        if (!qualifyingResult.q3.isNullOrEmpty()) {
-            qualifyingResult.q3
-        } else if (!qualifyingResult.q2.isNullOrEmpty()) {
-            qualifyingResult.q2
-        } else if (!qualifyingResult.q1.isNullOrEmpty()) {
-            qualifyingResult.q1
-        } else {
-            this.context.getString(R.string.no_time)
-        }
+    width = measureText(this, "8:88.888")
+    text = if (!qualifyingResult.q3.isNullOrEmpty()) {
+        qualifyingResult.q3
+    } else if (!qualifyingResult.q2.isNullOrEmpty()) {
+        qualifyingResult.q2
+    } else if (!qualifyingResult.q1.isNullOrEmpty()) {
+        qualifyingResult.q1
+    } else {
+        context.getString(R.string.no_time)
+    }
 }
 
 private fun measureText(textView: TextView, text: String): Int {

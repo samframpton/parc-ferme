@@ -46,7 +46,7 @@ class DriverListFragment : Fragment() {
                 .actionDriverListFragmentToDriverDetailFragment(driver, title)
             findNavController().navigate(directions)
         }
-        binding.rvDriverListDrivers.adapter = driverAdapter
+        binding.rvDriverList.adapter = driverAdapter
     }
 
     private fun setupChips() {
