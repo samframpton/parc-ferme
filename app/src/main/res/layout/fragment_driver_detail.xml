@@ -23,57 +23,60 @@
             android:id="@+id/iv_driver_detail_flag"
             style="@style/FlagIcon"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_large"
             android:contentDescription="@null"
-            app:layout_constraintBottom_toBottomOf="@id/tv_driver_detail_birth_date"
+            app:layout_constraintBottom_toTopOf="@id/barrier_driver_detail_horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_driver_detail_nationality"
+            app:layout_constraintTop_toTopOf="parent"
             app:nationality="@{driver.nationality}"
             tools:ignore="RtlHardcoded"
             tools:src="@drawable/ic_es" />
 
         <TextView
             android:id="@+id/tv_driver_detail_nationality"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{driver.nationality}"
             android:textSize="@dimen/text_large"
             app:layout_constraintBottom_toTopOf="@id/tv_driver_detail_birth_date"
             app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_driver_detail_championships"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="RtlHardcoded"
-            tools:text="British" />
+            tools:text="Spanish" />
 
         <TextView
             android:id="@+id/tv_driver_detail_birth_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_large"
             app:birthDate="@{driver.dateOfBirth}"
+            app:layout_constraintBottom_toTopOf="@id/barrier_driver_detail_horizontal"
             app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_driver_detail_championships"
             app:layout_constraintTop_toBottomOf="@id/tv_driver_detail_nationality"
-            tools:ignore="RtlHardcoded"
             tools:text="Born 29/07/81" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier_driver_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="end"
-            app:constraint_referenced_ids="tv_driver_detail_nationality, tv_driver_detail_birth_date" />
 
         <TextView
             android:id="@+id/tv_driver_detail_championships"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             android:textSize="@dimen/text_large"
             app:driverChampionships="@{driverStandings}"
             app:layout_constraintBottom_toTopOf="@id/tv_driver_detail_wins"
-            app:layout_constraintLeft_toRightOf="@id/barrier_driver_detail"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlHardcoded"
             tools:text="2 Championships" />
@@ -82,35 +85,40 @@
             android:id="@+id/tv_driver_detail_wins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_large"
             android:textSize="@dimen/text_large"
             app:driverWins="@{driverStandings}"
-            app:layout_constraintLeft_toRightOf="@id/barrier_driver_detail"
+            app:layout_constraintBottom_toTopOf="@id/barrier_driver_detail_horizontal"
+            app:layout_constraintLeft_toLeftOf="@id/tv_driver_detail_championships"
             app:layout_constraintTop_toBottomOf="@id/tv_driver_detail_championships"
             tools:ignore="RtlHardcoded"
             tools:text="32 Wins" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_driver_detail_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_driver_detail_flag, tv_driver_detail_birth_date, tv_driver_detail_wins" />
 
         <View
             android:id="@+id/divider_driver_detail"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
             android:background="?android:attr/listDivider"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_driver_detail_flag" />
+            app:layout_constraintTop_toBottomOf="@id/barrier_driver_detail_horizontal" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_driver_detail_standings"
-            android:layout_width="0dp"
+            android:id="@+id/rv_driver_detail"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_driver_detail" />
+            app:layout_constraintTop_toBottomOf="@id/divider_driver_detail"
+            tools:listitem="@layout/list_item_driver_detail_standing" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

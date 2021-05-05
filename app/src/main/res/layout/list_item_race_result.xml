@@ -13,9 +13,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
-        android:paddingRight="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_large"
         android:paddingBottom="@dimen/margin_small">
 
         <TextView
@@ -33,7 +33,7 @@
         <ImageView
             android:id="@+id/iv_list_item_race_result_flag"
             style="@style/FlagIcon"
-            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_large"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_list_item_race_result_position"
@@ -46,8 +46,8 @@
             android:id="@+id/tv_list_item_race_result_driver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_large"
@@ -63,8 +63,8 @@
             android:id="@+id/tv_list_item_race_result_constructor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{raceResult.constructor.name}"

@@ -43,7 +43,7 @@ class ConstructorDetailFragment : Fragment() {
                 )
             findNavController().navigate(action)
         }
-        binding.rvConstructorDetailStandings.adapter = constructorAdapter
+        binding.rvConstructorDetail.adapter = constructorAdapter
         val dividerAttrs = intArrayOf(android.R.attr.listDivider)
         val styledAttrs = requireContext().obtainStyledAttributes(dividerAttrs)
         val divider = styledAttrs.getDrawable(0)
@@ -52,7 +52,7 @@ class ConstructorDetailFragment : Fragment() {
         styledAttrs.recycle()
         val dividerDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         dividerDecoration.setDrawable(insetDivider)
-        binding.rvConstructorDetailStandings.addItemDecoration(dividerDecoration)
+        binding.rvConstructorDetail.addItemDecoration(dividerDecoration)
     }
 
     private fun setupObservers() {
