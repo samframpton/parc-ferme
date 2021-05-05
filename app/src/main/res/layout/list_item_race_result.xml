@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,92 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_small">
 
         <TextView
-            android:id="@+id/tv_list_item_race_result"
+            android:id="@+id/tv_list_item_race_result_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{raceResult.position + ` ` + raceResult.driver.givenName + ` ` + raceResult.driver.familyName}"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:position="@{raceResult.position}"
+            tools:text="1st" />
+
+        <ImageView
+            android:id="@+id/iv_list_item_race_result_flag"
+            style="@style/FlagIcon"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_race_result_position"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nationality="@{raceResult.driver.nationality}"
+            tools:ignore="RtlHardcoded"
+            tools:src="@drawable/ic_gb" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_result_driver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_large"
+            app:driverName="@{raceResult.driver}"
+            app:layout_constraintBottom_toTopOf="@id/tv_list_item_race_result_constructor"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_race_result_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_race_result_time"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Lewis Hamilton" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_result_constructor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{raceResult.constructor.name}"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_race_result_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_race_result_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_race_result_driver"
+            tools:text="Mercedes" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_result_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toTopOf="@id/tv_list_item_race_result_points"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:raceTime="@{raceResult}"
+            tools:text="1:34:31.421" />
+
+        <TextView
+            android:id="@+id/tv_list_item_race_result_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/tv_list_item_race_result_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_race_result_time"
+            app:points="@{raceResult.points}"
+            tools:text="25 Points" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

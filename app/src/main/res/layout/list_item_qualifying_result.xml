@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,79 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_small">
 
         <TextView
-            android:id="@+id/tv_list_item_qualifying_result"
+            android:id="@+id/tv_list_item_qualifying_result_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{qualifyingResult.position + ` ` + qualifyingResult.driver.givenName + ` ` + qualifyingResult.driver.familyName}"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:position="@{qualifyingResult.position}"
+            tools:text="1st" />
+
+        <ImageView
+            android:id="@+id/iv_list_item_qualifying_result_flag"
+            style="@style/FlagIcon"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_list_item_qualifying_result_position"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nationality="@{qualifyingResult.driver.nationality}"
+            tools:ignore="RtlHardcoded"
+            tools:src="@drawable/ic_fi" />
+
+        <TextView
+            android:id="@+id/tv_list_item_qualifying_result_driver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/text_large"
+            app:driverName="@{qualifyingResult.driver}"
+            app:layout_constraintBottom_toTopOf="@id/tv_list_item_qualifying_result_constructor"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_qualifying_result_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_qualifying_result_time"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Valterri Bottas" />
+
+        <TextView
+            android:id="@+id/tv_list_item_qualifying_result_constructor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{qualifyingResult.constructor.name}"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_item_qualifying_result_flag"
+            app:layout_constraintRight_toLeftOf="@id/tv_list_item_qualifying_result_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_item_qualifying_result_driver"
+            tools:text="Mercedes" />
+
+        <TextView
+            android:id="@+id/tv_list_item_qualifying_result_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:qualifyingTime="@{qualifyingResult}"
+            tools:text="1:18.348" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

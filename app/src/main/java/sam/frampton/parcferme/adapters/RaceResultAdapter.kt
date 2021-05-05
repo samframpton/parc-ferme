@@ -36,7 +36,11 @@ class RaceResultAdapter(private val onClick: (RaceResult) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemRaceResultBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ListItemRaceResultBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

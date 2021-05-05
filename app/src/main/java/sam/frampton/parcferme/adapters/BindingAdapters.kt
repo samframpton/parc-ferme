@@ -6,14 +6,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import sam.frampton.parcferme.R
-import sam.frampton.parcferme.data.Constructor
-import sam.frampton.parcferme.data.ConstructorStanding
-import sam.frampton.parcferme.data.Driver
-import sam.frampton.parcferme.data.DriverStanding
+import sam.frampton.parcferme.data.*
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-
 
 private val countryFlags = mapOf(
     "Australia" to R.drawable.ic_au,
@@ -68,6 +65,7 @@ private val nationalityFlags = mapOf(
     "Monegasque" to R.drawable.ic_mc,
     "New Zealander" to R.drawable.ic_nz,
     "Polish" to R.drawable.ic_pl,
+    "Portuguese" to R.drawable.ic_pt,
     "Russian" to R.drawable.ic_ru,
     "Spanish" to R.drawable.ic_es,
     "Swedish" to R.drawable.ic_se,
@@ -88,91 +86,35 @@ fun ImageView.setNationality(nationality: String) {
     this.contentDescription = nationality
 }
 
-@BindingAdapter("driverName")
-fun TextView.setDriverName(driver: Driver) {
-    this.text =
-        this.context.getString(
-            R.string.driver_full_name,
-            driver.givenName,
-            driver.familyName
-        )
-}
-
-@BindingAdapter("driverNumber")
-fun TextView.setDriverNumber(driver: Driver) {
-    this.minWidth = TextPaint().let {
-        it.textSize = this.textSize
-        it.measureText("00").toInt()
-    }
-    this.visibility =
-        driver.permanentNumber?.let {
-            this.text = it.toString()
-            View.VISIBLE
-        } ?: View.GONE
-}
-
-@BindingAdapter("position")
-fun TextView.setPosition(position: Int) {
-    this.minWidth = TextPaint().let {
-        it.textSize = this.textSize
-        val widestText = this.context.getString(R.string.ordinal_other, 88)
-        it.measureText(widestText).toInt()
-    }
-    this.text =
-        if (position > 10 && position.toString().let { it[it.length - 2] == '1' }) {
-            this.context.getString(R.string.ordinal_other, position)
-        } else {
-            when (position.toString().last()) {
-                '1' -> this.context.getString(R.string.ordinal_one, position)
-                '2' -> this.context.getString(R.string.ordinal_two, position)
-                '3' -> this.context.getString(R.string.ordinal_three, position)
-                else -> this.context.getString(R.string.ordinal_other, position)
-            }
-        }
-}
-
 @BindingAdapter("season")
 fun TextView.setSeason(season: Int) {
     this.text = season.toString()
 }
 
-@BindingAdapter("constructors")
-fun TextView.setConstructors(constructors: List<Constructor>) {
-    this.text = constructors.map(Constructor::name).joinToString()
+@BindingAdapter("driverName")
+fun TextView.setDriverName(driver: Driver) {
+    this.text = this.context.getString(
+        R.string.driver_full_name,
+        driver.givenName,
+        driver.familyName
+    )
 }
 
-@BindingAdapter("points")
-fun TextView.setPoints(points: Double) {
-    this.minWidth = TextPaint().let {
-        it.textSize = this.textSize
-        val widestText = this.context.getString(R.string.points, "888.5")
-        it.measureText(widestText).toInt()
-    }
-    this.text =
-        this.context.getString(
-            R.string.points,
-            if (points.rem(1) == 0.0) {
-                (points.toInt())
-            } else {
-                points
-            }.toString()
-        )
+@BindingAdapter("driverNumber")
+fun TextView.setDriverNumber(driver: Driver) {
+    this.minWidth = measureText(this, "88")
+    this.visibility = driver.permanentNumber?.let {
+        this.text = it.toString()
+        View.VISIBLE
+    } ?: View.GONE
 }
 
-@BindingAdapter("wins")
-fun TextView.setWins(wins: Int) {
-    this.minWidth = TextPaint().let {
-        it.textSize = this.textSize
-        val widestText =
-            this.context.resources.getQuantityString(R.plurals.wins, 88, 88)
-        it.measureText(widestText).toInt()
-    }
-    this.text = this.context.resources.getQuantityString(R.plurals.wins, wins, wins)
-}
-
-@BindingAdapter("date")
-fun TextView.setDate(date: LocalDate) {
-    this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
+@BindingAdapter("birthDate")
+fun TextView.setBirthDate(birthDate: LocalDate) {
+    this.text = this.context.getString(
+        R.string.birth_date,
+        birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+    )
 }
 
 @BindingAdapter("driverChampionships")
@@ -189,12 +131,9 @@ fun TextView.setDriverWins(driverStandings: List<DriverStanding>?) {
     } ?: ""
 }
 
-@BindingAdapter("birthDate")
-fun TextView.setBirthDate(birthDate: LocalDate) {
-    this.text = this.context.getString(
-        R.string.birth_date,
-        birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
-    )
+@BindingAdapter("constructors")
+fun TextView.setConstructors(constructors: List<Constructor>) {
+    this.text = constructors.map(Constructor::name).joinToString()
 }
 
 @BindingAdapter("constructorChampionships")
@@ -209,4 +148,99 @@ fun TextView.setConstructorWins(constructorStandings: List<ConstructorStanding>?
     this.text = constructorStandings?.sumOf { it.wins }?.let {
         this.context.resources.getQuantityString(R.plurals.wins, it, it)
     } ?: ""
+}
+
+@BindingAdapter("position")
+fun TextView.setPosition(position: Int) {
+    this.minWidth =
+        measureText(this, this.context.getString(R.string.ordinal_other, 88))
+    this.text =
+        if (position > 10 && position.toString().let { it[it.length - 2] == '1' }) {
+            this.context.getString(R.string.ordinal_other, position)
+        } else {
+            when (position.toString().last()) {
+                '1' -> this.context.getString(R.string.ordinal_one, position)
+                '2' -> this.context.getString(R.string.ordinal_two, position)
+                '3' -> this.context.getString(R.string.ordinal_three, position)
+                else -> this.context.getString(R.string.ordinal_other, position)
+            }
+        }
+}
+
+@BindingAdapter("points")
+fun TextView.setPoints(points: Double) {
+    this.minWidth =
+        measureText(this, this.context.getString(R.string.points, "888.5"))
+    this.text =
+        this.context.getString(
+            R.string.points,
+            if (points.rem(1) == 0.0) {
+                (points.toInt())
+            } else {
+                points
+            }.toString()
+        )
+}
+
+@BindingAdapter("wins")
+fun TextView.setWins(wins: Int) {
+    this.minWidth = measureText(
+        this,
+        this.context.resources.getQuantityString(R.plurals.wins, 88, 88)
+    )
+    this.text = this.context.resources.getQuantityString(R.plurals.wins, wins, wins)
+}
+
+@BindingAdapter("dateShort")
+fun TextView.setDateShort(date: LocalDate) {
+    this.text = date.format(DateTimeFormatter.ofPattern("MMM dd"))
+}
+
+@BindingAdapter("dateFull")
+fun TextView.setDateFull(date: LocalDate) {
+    this.text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+}
+
+@BindingAdapter("timeFull")
+fun TextView.setTimeFull(time: LocalTime?) {
+    this.visibility = time?.let {
+        this.text = this.context.getString(
+            R.string.time_full,
+            time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        )
+        View.VISIBLE
+    } ?: View.GONE
+}
+
+@BindingAdapter("raceTime")
+fun TextView.setRaceTime(raceResult: RaceResult) {
+    this.width = measureText(this, "8:88:88.888")
+    this.text =
+        if (!raceResult.time.isNullOrEmpty()) {
+            raceResult.time
+        } else {
+            raceResult.status
+        }
+}
+
+@BindingAdapter("qualifyingTime")
+fun TextView.setQualifyingTime(qualifyingResult: QualifyingResult) {
+    this.width = measureText(this, "8:88.888")
+    this.text =
+        if (!qualifyingResult.q3.isNullOrEmpty()) {
+            qualifyingResult.q3
+        } else if (!qualifyingResult.q2.isNullOrEmpty()) {
+            qualifyingResult.q2
+        } else if (!qualifyingResult.q1.isNullOrEmpty()) {
+            qualifyingResult.q1
+        } else {
+            this.context.getString(R.string.no_time)
+        }
+}
+
+private fun measureText(textView: TextView, text: String): Int {
+    return TextPaint().let {
+        it.textSize = textView.textSize
+        it.measureText(text)
+    }.toInt()
 }
