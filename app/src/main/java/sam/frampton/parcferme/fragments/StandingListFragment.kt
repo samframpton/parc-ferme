@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
 import sam.frampton.parcferme.adapters.DriverStandingAdapter
@@ -62,9 +63,15 @@ class StandingListFragment : Fragment() {
 
     private fun setupChips() {
         binding.chipStandingListSeason.setOnClickListener {
-            val directions = StandingListFragmentDirections
-                .actionStandingListFragmentToSeasonDialogFragment()
-            findNavController().navigate(directions)
+            val seasons = seasonViewModel.seasons.value
+            if (!seasons.isNullOrEmpty()) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.season)
+                    .setItems(seasons.map { it.toString() }.toTypedArray()) { _, which ->
+                        setSeason(seasons[which])
+                    }
+                    .show()
+            }
         }
         if (args.standingType == CONSTRUCTOR ||
             (args.standingType == DEFAULT && standingListViewModel.standingType == CONSTRUCTOR)
@@ -107,19 +114,12 @@ class StandingListFragment : Fragment() {
                 setSeason(standingListViewModel.season ?: seasons.first())
             }
         }
-
         standingListViewModel.driverStandingList.observe(viewLifecycleOwner) {
             driverAdapter.submitList(it)
         }
-
         standingListViewModel.constructorStandingList.observe(viewLifecycleOwner) {
             constructorAdapter.submitList(it)
         }
-
-        findNavController().getBackStackEntry(R.id.standingListFragment).savedStateHandle
-            .getLiveData<Int>(SeasonDialogFragment.SEASON_KEY).observe(viewLifecycleOwner) {
-                setSeason(it)
-            }
     }
 
     private fun setSeason(season: Int) {

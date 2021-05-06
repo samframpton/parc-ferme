@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.ConstructorAdapter
 import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
@@ -47,9 +48,15 @@ class ConstructorListFragment : Fragment() {
 
     private fun setupChips() {
         binding.chipConstructorListSeason.setOnClickListener {
-            val directions = ConstructorListFragmentDirections
-                .actionConstructorListFragmentToSeasonDialogFragment()
-            findNavController().navigate(directions)
+            val seasons = seasonViewModel.seasons.value
+            if (!seasons.isNullOrEmpty()) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.season)
+                    .setItems(seasons.map { it.toString() }.toTypedArray()) { _, which ->
+                        setSeason(seasons[which])
+                    }
+                    .show()
+            }
         }
     }
 
@@ -59,15 +66,9 @@ class ConstructorListFragment : Fragment() {
                 setSeason(constructorListViewModel.season ?: seasons.first())
             }
         }
-
         constructorListViewModel.constructorList.observe(viewLifecycleOwner) {
             constructorAdapter.submitList(it)
         }
-
-        findNavController().getBackStackEntry(R.id.constructorListFragment).savedStateHandle
-            .getLiveData<Int>(SeasonDialogFragment.SEASON_KEY).observe(viewLifecycleOwner) {
-                setSeason(it)
-            }
     }
 
     private fun setSeason(season: Int) {
