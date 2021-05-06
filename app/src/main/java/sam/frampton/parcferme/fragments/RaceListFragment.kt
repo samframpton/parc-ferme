@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.RaceAdapter
 import sam.frampton.parcferme.databinding.FragmentRaceListBinding
@@ -44,9 +45,15 @@ class RaceListFragment : Fragment() {
 
     private fun setupChips() {
         binding.chipRaceListSeason.setOnClickListener {
-            val directions = RaceListFragmentDirections
-                .actionRaceListFragmentToSeasonDialogFragment()
-            findNavController().navigate(directions)
+            val seasons = seasonViewModel.seasons.value
+            if (!seasons.isNullOrEmpty()) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.season)
+                    .setItems(seasons.map { it.toString() }.toTypedArray()) { _, which ->
+                        setSeason(seasons[which])
+                    }
+                    .show()
+            }
         }
     }
 
@@ -56,15 +63,9 @@ class RaceListFragment : Fragment() {
                 setSeason(raceListViewModel.season ?: seasons.first())
             }
         }
-
         raceListViewModel.raceList.observe(viewLifecycleOwner) {
             raceAdapter.submitList(it)
         }
-
-        findNavController().getBackStackEntry(R.id.raceListFragment).savedStateHandle
-            .getLiveData<Int>(SeasonDialogFragment.SEASON_KEY).observe(viewLifecycleOwner) {
-                setSeason(it)
-            }
     }
 
     private fun setSeason(season: Int) {
