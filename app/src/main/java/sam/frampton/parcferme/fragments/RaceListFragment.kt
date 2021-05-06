@@ -39,6 +39,7 @@ class RaceListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvRaceList.adapter = raceAdapter
+        binding.rvRaceList.setOrientedLayoutManager()
     }
 
     private fun setupChips() {
