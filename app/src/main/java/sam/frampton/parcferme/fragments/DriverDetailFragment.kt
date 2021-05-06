@@ -1,6 +1,5 @@
 package sam.frampton.parcferme.fragments
 
-import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
-import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.DriverDetailStandingAdapter
 import sam.frampton.parcferme.databinding.FragmentDriverDetailBinding
 import sam.frampton.parcferme.viewmodels.DriverDetailViewModel
@@ -43,15 +40,7 @@ class DriverDetailFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.rvDriverDetail.adapter = driverAdapter
-        val dividerAttrs = intArrayOf(android.R.attr.listDivider)
-        val styledAttrs = requireContext().obtainStyledAttributes(dividerAttrs)
-        val divider = styledAttrs.getDrawable(0)
-        val inset = resources.getDimensionPixelSize(R.dimen.margin_large)
-        val insetDivider = InsetDrawable(divider, inset, 0, inset, 0)
-        styledAttrs.recycle()
-        val dividerDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        dividerDecoration.setDrawable(insetDivider)
-        binding.rvDriverDetail.addItemDecoration(dividerDecoration)
+        binding.rvDriverDetail.setOrientedLayoutManager()
     }
 
     private fun setupObservers() {

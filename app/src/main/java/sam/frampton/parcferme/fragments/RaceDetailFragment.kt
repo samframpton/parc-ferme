@@ -54,6 +54,7 @@ class RaceDetailFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.rvRaceDetail.adapter = raceResultAdapter
+        binding.rvRaceDetail.setOrientedLayoutManager()
     }
 
     private fun getDriverTitle(driver: Driver): String {

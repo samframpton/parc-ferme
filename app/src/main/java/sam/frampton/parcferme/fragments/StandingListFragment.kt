@@ -57,6 +57,7 @@ class StandingListFragment : Fragment() {
                 )
             findNavController().navigate(directions)
         }
+        binding.rvStandingList.setOrientedLayoutManager()
     }
 
     private fun setupChips() {

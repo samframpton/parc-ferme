@@ -42,6 +42,7 @@ class ConstructorListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvConstructorList.adapter = constructorAdapter
+        binding.rvConstructorList.setOrientedLayoutManager()
     }
 
     private fun setupChips() {

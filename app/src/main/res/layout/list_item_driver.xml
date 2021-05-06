@@ -37,6 +37,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_large"
+            android:textStyle="bold"
             app:driverName="@{driver}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

@@ -47,6 +47,7 @@ class DriverListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvDriverList.adapter = driverAdapter
+        binding.rvDriverList.setOrientedLayoutManager()
     }
 
     private fun setupChips() {
