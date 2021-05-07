@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.QualifyingResultAdapter
 import sam.frampton.parcferme.adapters.RaceResultAdapter
-import sam.frampton.parcferme.data.Driver
 import sam.frampton.parcferme.databinding.FragmentRaceDetailBinding
 import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.RaceDetailViewModel
@@ -50,7 +49,7 @@ class RaceDetailFragment : Fragment() {
             val action = RaceDetailFragmentDirections
                 .actionRaceDetailFragmentToDriverDetailFragment(
                     result.driver,
-                    getDriverTitle(result.driver)
+                    result.driver.getTitle(requireContext())
                 )
             findNavController().navigate(action)
         }
@@ -58,19 +57,13 @@ class RaceDetailFragment : Fragment() {
             val action = RaceDetailFragmentDirections
                 .actionRaceDetailFragmentToDriverDetailFragment(
                     result.driver,
-                    getDriverTitle(result.driver)
+                    result.driver.getTitle(requireContext())
                 )
             findNavController().navigate(action)
         }
         binding.rvRaceDetail.adapter = raceResultAdapter
         binding.rvRaceDetail.setOrientedLayoutManager()
         binding.swipeRefreshRaceDetail.setOnRefreshListener { refresh(true) }
-    }
-
-    private fun getDriverTitle(driver: Driver): String {
-        return driver.permanentNumber?.let {
-            getString(R.string.driver_full_name_and_number, it, driver.givenName, driver.familyName)
-        } ?: getString(R.string.driver_full_name, driver.givenName, driver.familyName)
     }
 
     private fun setupChips() {

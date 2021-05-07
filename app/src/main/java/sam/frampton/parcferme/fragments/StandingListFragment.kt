@@ -45,11 +45,10 @@ class StandingListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         driverAdapter = DriverStandingAdapter { standing ->
-            val driver = standing.driver
             val directions = StandingListFragmentDirections
                 .actionStandingListFragmentToDriverDetailFragment(
-                    driver,
-                    getString(R.string.driver_full_name, driver.givenName, driver.familyName)
+                    standing.driver,
+                    standing.driver.getTitle(requireContext())
                 )
             findNavController().navigate(directions)
         }
