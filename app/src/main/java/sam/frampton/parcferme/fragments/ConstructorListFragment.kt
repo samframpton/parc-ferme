@@ -47,6 +47,7 @@ class ConstructorListFragment : Fragment() {
         binding.rvConstructorList.adapter = constructorAdapter
         binding.rvConstructorList.setOrientedLayoutManager()
         binding.swipeRefreshConstructorList.setOnRefreshListener { refresh() }
+        binding.swipeRefreshConstructorList.setColor()
     }
 
     private fun setupChips() {

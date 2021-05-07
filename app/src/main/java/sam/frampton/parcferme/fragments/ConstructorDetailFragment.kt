@@ -53,6 +53,7 @@ class ConstructorDetailFragment : Fragment() {
         binding.swipeRefreshConstructorDetail.setOnRefreshListener {
             constructorDetailViewModel.refreshConstructorStandings(true)
         }
+        binding.swipeRefreshConstructorDetail.setColor()
     }
 
     private fun setupObservers() {

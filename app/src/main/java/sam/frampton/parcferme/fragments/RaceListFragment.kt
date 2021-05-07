@@ -44,6 +44,7 @@ class RaceListFragment : Fragment() {
         binding.rvRaceList.adapter = raceAdapter
         binding.rvRaceList.setOrientedLayoutManager()
         binding.swipeRefreshRaceList.setOnRefreshListener { refresh() }
+        binding.swipeRefreshRaceList.setColor()
     }
 
     private fun setupChips() {

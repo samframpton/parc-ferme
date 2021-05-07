@@ -64,6 +64,7 @@ class RaceDetailFragment : Fragment() {
         binding.rvRaceDetail.adapter = raceResultAdapter
         binding.rvRaceDetail.setOrientedLayoutManager()
         binding.swipeRefreshRaceDetail.setOnRefreshListener { refresh(true) }
+        binding.swipeRefreshRaceDetail.setColor()
     }
 
     private fun setupChips() {
