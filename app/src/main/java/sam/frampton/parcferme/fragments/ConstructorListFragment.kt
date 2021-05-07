@@ -12,12 +12,14 @@ import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.ConstructorAdapter
 import sam.frampton.parcferme.databinding.FragmentConstructorListBinding
 import sam.frampton.parcferme.viewmodels.ConstructorListViewModel
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
 class ConstructorListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val constructorListViewModel: ConstructorListViewModel by activityViewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private lateinit var binding: FragmentConstructorListBinding
     private lateinit var constructorAdapter: ConstructorAdapter
 
@@ -44,6 +46,7 @@ class ConstructorListFragment : Fragment() {
         }
         binding.rvConstructorList.adapter = constructorAdapter
         binding.rvConstructorList.setOrientedLayoutManager()
+        binding.swipeRefreshConstructorList.setOnRefreshListener { refresh() }
     }
 
     private fun setupChips() {
@@ -62,13 +65,31 @@ class ConstructorListFragment : Fragment() {
 
     private fun setupObservers() {
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
-            if (seasons.isNotEmpty()) {
-                setSeason(constructorListViewModel.season ?: seasons.first())
+            if (seasons.isNotEmpty()) setSeason(constructorListViewModel.season ?: seasons.first())
+        }
+        seasonViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        constructorListViewModel.constructorList.observe(
+            viewLifecycleOwner,
+            constructorAdapter::submitList
+        )
+        constructorListViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
+            refreshResult?.let {
+                mainActivityViewModel.setRefreshResult(refreshResult)
+                constructorListViewModel.clearRefreshResult()
             }
         }
-        constructorListViewModel.constructorList.observe(viewLifecycleOwner) {
-            constructorAdapter.submitList(it)
+        constructorListViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        mainActivityViewModel.menuRefresh.observe(viewLifecycleOwner) { refresh ->
+            if (refresh == true) {
+                refresh()
+                mainActivityViewModel.clearMenuRefresh()
+            }
         }
+    }
+
+    private fun refresh() {
+        seasonViewModel.refreshSeasons(true)
+        constructorListViewModel.refreshConstructors(true)
     }
 
     private fun setSeason(season: Int) {
@@ -77,5 +98,11 @@ class ConstructorListFragment : Fragment() {
             constructorListViewModel.setSeason(season)
             constructorListViewModel.refreshConstructors(false)
         }
+    }
+
+    private fun isRefreshing() {
+        binding.swipeRefreshConstructorList.isRefreshing =
+            seasonViewModel.isRefreshing.value == true
+                    || constructorListViewModel.isRefreshing.value == true
     }
 }

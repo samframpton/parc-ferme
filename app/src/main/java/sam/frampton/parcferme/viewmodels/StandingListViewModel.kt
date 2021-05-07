@@ -16,21 +16,31 @@ class StandingListViewModel(application: Application) : AndroidViewModel(applica
     var season: Int? = null
         private set
     var standingType: StandingListFragment.StandingType = StandingListFragment.StandingType.DEFAULT
+
     private val _driverStandingList = MediatorLiveData<List<DriverStanding>>()
     val driverStandingList: LiveData<List<DriverStanding>>
         get() = _driverStandingList
     private var seasonDriverStandingList: LiveData<List<DriverStanding>>? = null
+
+    private val _driverStandingRefreshResult: MutableLiveData<RefreshResult> = MutableLiveData()
+    val driverStandingRefreshResult: LiveData<RefreshResult>
+        get() = _driverStandingRefreshResult
+    private val _driverStandingIsRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val driverStandingIsRefreshing: LiveData<Boolean>
+        get() = _driverStandingIsRefreshing
+
     private val _constructorStandingList = MediatorLiveData<List<ConstructorStanding>>()
     val constructorStandingList: LiveData<List<ConstructorStanding>>
         get() = _constructorStandingList
     private var seasonConstructorStandingList: LiveData<List<ConstructorStanding>>? = null
 
-    private val _networkError = MutableLiveData(false)
-    val networkError: LiveData<Boolean>
-        get() = _networkError
-    private val _otherError = MutableLiveData(false)
-    val otherError: LiveData<Boolean>
-        get() = _otherError
+    private val _constructorStandingRefreshResult: MutableLiveData<RefreshResult> =
+        MutableLiveData()
+    val constructorStandingRefreshResult: LiveData<RefreshResult>
+        get() = _constructorStandingRefreshResult
+    private val _constructorStandingIsRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val constructorStandingIsRefreshing: LiveData<Boolean>
+        get() = _constructorStandingIsRefreshing
 
     fun setSeason(season: Int) {
         this.season = season
@@ -50,37 +60,32 @@ class StandingListViewModel(application: Application) : AndroidViewModel(applica
 
     fun refreshDriverStandings(force: Boolean) {
         season?.let { season ->
+            _driverStandingIsRefreshing.value = true
             viewModelScope.launch {
-                when (repository.refreshDriverStandingsBySeason(season, force)) {
-                    RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                    RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                    RefreshResult.SUCCESS -> {
-                    }
-                    RefreshResult.CACHE -> {
-                    }
-                }
+                _driverStandingRefreshResult.value =
+                    repository.refreshDriverStandingsBySeason(season, force)
+                _driverStandingIsRefreshing.value = false
             }
         }
+    }
+
+    fun clearDriverStandingRefreshResult() {
+        _driverStandingRefreshResult.value = null
     }
 
     fun refreshConstructorStandings(force: Boolean) {
         season?.let { season ->
+            _constructorStandingIsRefreshing.value = true
             viewModelScope.launch {
-                when (repository.refreshConstructorStandingsBySeason(season, force)) {
-                    RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                    RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                    RefreshResult.SUCCESS -> {
-                    }
-                    RefreshResult.CACHE -> {
-                    }
-                }
+                _constructorStandingRefreshResult.value =
+                    repository.refreshConstructorStandingsBySeason(season, force)
+                _constructorStandingIsRefreshing.value = false
             }
         }
     }
 
-    fun clearErrors() {
-        _networkError.value = false
-        _otherError.value = false
+    fun clearConstructorStandingRefreshResult() {
+        _constructorStandingRefreshResult.value = null
     }
 
     override fun onCleared() {

@@ -1,11 +1,9 @@
 package sam.frampton.parcferme.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import sam.frampton.parcferme.data.Driver
 import sam.frampton.parcferme.data.DriverStanding
 import sam.frampton.parcferme.data.RefreshResult
 import sam.frampton.parcferme.data.repositories.StandingRepository
@@ -14,29 +12,46 @@ class DriverDetailViewModel(application: Application) : AndroidViewModel(applica
 
     private val repository = StandingRepository(application)
 
-    private val _networkError = MutableLiveData(false)
-    val networkError: LiveData<Boolean>
-        get() = _networkError
-    private val _otherError = MutableLiveData(false)
-    val otherError: LiveData<Boolean>
-        get() = _otherError
+    var driver: Driver? = null
+        private set
+    private val _standingList = MediatorLiveData<List<DriverStanding>>()
+    val standingList: LiveData<List<DriverStanding>>
+        get() = _standingList
+    private var driverStandingList: LiveData<List<DriverStanding>>? = null
 
-    fun getDriverStandings(driverId: String): LiveData<List<DriverStanding>> {
-        viewModelScope.launch {
-            when (repository.refreshDriverStandingsByDriver(driverId)) {
-                RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                RefreshResult.SUCCESS -> {
-                }
-                RefreshResult.CACHE -> {
-                }
-            }
+    private val _refreshResult: MutableLiveData<RefreshResult> = MutableLiveData()
+    val refreshResult: LiveData<RefreshResult>
+        get() = _refreshResult
+    private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val isRefreshing: LiveData<Boolean>
+        get() = _isRefreshing
+
+    fun setDriver(driver: Driver) {
+        this.driver = driver
+        driverStandingList?.let { _standingList.removeSource(it) }
+        repository.getDriverStandingsByDriver(driver.driverId).also {
+            driverStandingList = it
+            _standingList.addSource(it) { standings -> _standingList.value = standings }
         }
-        return repository.getDriverStandingsByDriver(driverId)
     }
 
-    fun clearErrors() {
-        _networkError.value = false
-        _otherError.value = false
+    fun refreshDriverStandings(force: Boolean) {
+        driver?.let { driver ->
+            _isRefreshing.value = true
+            viewModelScope.launch {
+                _refreshResult.value =
+                    repository.refreshDriverStandingsByDriver(driver.driverId, force)
+                _isRefreshing.value = false
+            }
+        }
+    }
+
+    fun clearRefreshResult() {
+        _refreshResult.value = null
+    }
+
+    override fun onCleared() {
+        driverStandingList?.let { _standingList.removeSource(it) }
+        driverStandingList = null
     }
 }

@@ -1,6 +1,9 @@
 package sam.frampton.parcferme
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -8,16 +11,30 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import sam.frampton.parcferme.data.RefreshResult
+import sam.frampton.parcferme.databinding.ActivityMainBinding
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
+import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private val seasonViewModel: SeasonViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupNavigation()
+        setupObservers()
+    }
+
+    private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -30,10 +47,54 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavView.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(navController)
     }
+
+    private fun setupObservers() {
+        seasonViewModel.refreshResult.observe(this) { refreshResult ->
+            refreshResult?.let {
+                when (refreshResult) {
+                    RefreshResult.NETWORK_ERROR -> showError(R.string.network_error_message)
+                    RefreshResult.OTHER_ERROR -> showError(R.string.other_error_message)
+                    else -> {
+                    }
+                }
+                seasonViewModel.clearRefreshResult()
+            }
+        }
+        mainActivityViewModel.refreshResult.observe(this) { refreshResult ->
+            refreshResult?.let {
+                when (refreshResult) {
+                    RefreshResult.NETWORK_ERROR -> showError(R.string.network_error_message)
+                    RefreshResult.OTHER_ERROR -> showError(R.string.other_error_message)
+                    else -> {
+                    }
+                }
+                mainActivityViewModel.clearRefreshResult()
+            }
+        }
+    }
+
+    private fun showError(text: Int) =
+        Snackbar.make(binding.root, text, BaseTransientBottomBar.LENGTH_LONG)
+            .apply { anchorView = binding.bottomNavigation }
+            .show()
 
     override fun onSupportNavigateUp(): Boolean =
         navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_refresh -> {
+                mainActivityViewModel.setMenuRefresh()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
