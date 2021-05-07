@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Parc Ferme</string>
 
+    <string name="menu_refresh">Refresh</string>
+
+    <string name="network_error_message">Could not refresh data. A network error occurred.</string>
+    <string name="other_error_message">Could not refresh data. An error occurred.</string>
+
     <string name="season">Season</string>
     <string name="drivers">Drivers</string>
     <string name="constructors">Constructors</string>

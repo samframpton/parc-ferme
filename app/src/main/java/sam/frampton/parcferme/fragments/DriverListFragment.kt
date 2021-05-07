@@ -12,12 +12,14 @@ import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.DriverAdapter
 import sam.frampton.parcferme.databinding.FragmentDriverListBinding
 import sam.frampton.parcferme.viewmodels.DriverListViewModel
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
 class DriverListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val driverListViewModel: DriverListViewModel by activityViewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private lateinit var binding: FragmentDriverListBinding
     private lateinit var driverAdapter: DriverAdapter
 
@@ -49,6 +51,7 @@ class DriverListFragment : Fragment() {
         }
         binding.rvDriverList.adapter = driverAdapter
         binding.rvDriverList.setOrientedLayoutManager()
+        binding.swipeRefreshDriverList.setOnRefreshListener { refresh() }
     }
 
     private fun setupChips() {
@@ -67,13 +70,28 @@ class DriverListFragment : Fragment() {
 
     private fun setupObservers() {
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
-            if (seasons.isNotEmpty()) {
-                setSeason(driverListViewModel.season ?: seasons.first())
+            if (seasons.isNotEmpty()) setSeason(driverListViewModel.season ?: seasons.first())
+        }
+        seasonViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        driverListViewModel.driverList.observe(viewLifecycleOwner, driverAdapter::submitList)
+        driverListViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
+            refreshResult?.let {
+                mainActivityViewModel.setRefreshResult(refreshResult)
+                driverListViewModel.clearRefreshResult()
             }
         }
-        driverListViewModel.driverList.observe(viewLifecycleOwner) {
-            driverAdapter.submitList(it)
+        driverListViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        mainActivityViewModel.menuRefresh.observe(viewLifecycleOwner) { refresh ->
+            if (refresh == true) {
+                refresh()
+                mainActivityViewModel.clearMenuRefresh()
+            }
         }
+    }
+
+    private fun refresh() {
+        seasonViewModel.refreshSeasons(true)
+        driverListViewModel.refreshDrivers(true)
     }
 
     private fun setSeason(season: Int) {
@@ -82,5 +100,11 @@ class DriverListFragment : Fragment() {
             driverListViewModel.setSeason(season)
             driverListViewModel.refreshDrivers(false)
         }
+    }
+
+    private fun isRefreshing() {
+        binding.swipeRefreshDriverList.isRefreshing =
+            seasonViewModel.isRefreshing.value == true
+                    || driverListViewModel.isRefreshing.value == true
     }
 }

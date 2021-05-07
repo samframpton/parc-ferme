@@ -18,12 +18,12 @@ class DriverListViewModel(application: Application) : AndroidViewModel(applicati
         get() = _driverList
     private var seasonDriverList: LiveData<List<Driver>>? = null
 
-    private val _networkError = MutableLiveData(false)
-    val networkError: LiveData<Boolean>
-        get() = _networkError
-    private val _otherError = MutableLiveData(false)
-    val otherError: LiveData<Boolean>
-        get() = _otherError
+    private val _refreshResult: MutableLiveData<RefreshResult> = MutableLiveData()
+    val refreshResult: LiveData<RefreshResult>
+        get() = _refreshResult
+    private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val isRefreshing: LiveData<Boolean>
+        get() = _isRefreshing
 
     fun setSeason(season: Int) {
         this.season = season
@@ -36,22 +36,16 @@ class DriverListViewModel(application: Application) : AndroidViewModel(applicati
 
     fun refreshDrivers(force: Boolean) {
         season?.let { season ->
+            _isRefreshing.value = true
             viewModelScope.launch {
-                when (repository.refreshDrivers(season, force)) {
-                    RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                    RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                    RefreshResult.SUCCESS -> {
-                    }
-                    RefreshResult.CACHE -> {
-                    }
-                }
+                _refreshResult.value = repository.refreshDrivers(season, force)
+                _isRefreshing.value = false
             }
         }
     }
 
-    fun clearErrors() {
-        _networkError.value = false
-        _otherError.value = false
+    fun clearRefreshResult() {
+        _refreshResult.value = null
     }
 
     override fun onCleared() {

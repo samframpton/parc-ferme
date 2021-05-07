@@ -120,15 +120,21 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintTop_toBottomOf="@id/barrier_driver_detail_horizontal" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_driver_detail"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_driver_detail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_driver_detail"
-            tools:listitem="@layout/list_item_driver_detail_standing" />
+            app:layout_constraintTop_toBottomOf="@id/divider_driver_detail">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_driver_detail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:paddingTop="@dimen/margin_small"
+                android:paddingBottom="@dimen/margin_small"
+                tools:listitem="@layout/list_item_driver_detail_standing" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

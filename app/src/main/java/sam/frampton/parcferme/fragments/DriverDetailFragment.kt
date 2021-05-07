@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.DriverDetailStandingAdapter
 import sam.frampton.parcferme.databinding.FragmentDriverDetailBinding
 import sam.frampton.parcferme.viewmodels.DriverDetailViewModel
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 
 class DriverDetailFragment : Fragment() {
 
     private val driverDetailViewModel: DriverDetailViewModel by viewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val args: DriverDetailFragmentArgs by navArgs()
     private lateinit var binding: FragmentDriverDetailBinding
     private lateinit var driverAdapter: DriverDetailStandingAdapter
@@ -24,10 +27,16 @@ class DriverDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDriverDetailBinding.inflate(layoutInflater)
-        binding.driver = args.driver
+        setDriver()
         setupRecyclerView()
         setupObservers()
         return binding.root
+    }
+
+    private fun setDriver() {
+        binding.driver = args.driver
+        driverDetailViewModel.setDriver(args.driver)
+        driverDetailViewModel.refreshDriverStandings(false)
     }
 
     private fun setupRecyclerView() {
@@ -41,14 +50,32 @@ class DriverDetailFragment : Fragment() {
         }
         binding.rvDriverDetail.adapter = driverAdapter
         binding.rvDriverDetail.setOrientedLayoutManager()
+        binding.swipeRefreshDriverDetail.setOnRefreshListener {
+            driverDetailViewModel.refreshDriverStandings(true)
+        }
     }
 
     private fun setupObservers() {
-        driverDetailViewModel.getDriverStandings(args.driver.driverId).observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                driverAdapter.submitList(it)
-                binding.driverStandings = it
+        driverDetailViewModel.standingList.observe(viewLifecycleOwner) { standings ->
+            if (standings.isNotEmpty()) {
+                driverAdapter.submitList(standings)
+                binding.driverStandings = standings
                 binding.executePendingBindings()
+            }
+        }
+        driverDetailViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
+            refreshResult?.let {
+                mainActivityViewModel.setRefreshResult(refreshResult)
+                driverDetailViewModel.clearRefreshResult()
+            }
+        }
+        driverDetailViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing ->
+            binding.swipeRefreshDriverDetail.isRefreshing = isRefreshing == true
+        }
+        mainActivityViewModel.menuRefresh.observe(viewLifecycleOwner) { refresh ->
+            if (refresh == true) {
+                driverDetailViewModel.refreshDriverStandings(true)
+                mainActivityViewModel.clearMenuRefresh()
             }
         }
     }

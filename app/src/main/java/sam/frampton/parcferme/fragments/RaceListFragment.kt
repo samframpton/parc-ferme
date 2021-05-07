@@ -11,6 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.RaceAdapter
 import sam.frampton.parcferme.databinding.FragmentRaceListBinding
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.RaceListViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 
@@ -18,6 +19,7 @@ class RaceListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val raceListViewModel: RaceListViewModel by activityViewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private lateinit var binding: FragmentRaceListBinding
     private lateinit var raceAdapter: RaceAdapter
 
@@ -41,6 +43,7 @@ class RaceListFragment : Fragment() {
         }
         binding.rvRaceList.adapter = raceAdapter
         binding.rvRaceList.setOrientedLayoutManager()
+        binding.swipeRefreshRaceList.setOnRefreshListener { refresh() }
     }
 
     private fun setupChips() {
@@ -59,13 +62,28 @@ class RaceListFragment : Fragment() {
 
     private fun setupObservers() {
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
-            if (seasons.isNotEmpty()) {
-                setSeason(raceListViewModel.season ?: seasons.first())
+            if (seasons.isNotEmpty()) setSeason(raceListViewModel.season ?: seasons.first())
+        }
+        seasonViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        raceListViewModel.raceList.observe(viewLifecycleOwner, raceAdapter::submitList)
+        raceListViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
+            refreshResult?.let {
+                mainActivityViewModel.setRefreshResult(refreshResult)
+                raceListViewModel.clearRefreshResult()
             }
         }
-        raceListViewModel.raceList.observe(viewLifecycleOwner) {
-            raceAdapter.submitList(it)
+        raceListViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+        mainActivityViewModel.menuRefresh.observe(viewLifecycleOwner) { refresh ->
+            if (refresh == true) {
+                refresh()
+                mainActivityViewModel.clearMenuRefresh()
+            }
         }
+    }
+
+    private fun refresh() {
+        seasonViewModel.refreshSeasons(true)
+        raceListViewModel.refreshRaces(true)
     }
 
     private fun setSeason(season: Int) {
@@ -74,5 +92,11 @@ class RaceListFragment : Fragment() {
             raceListViewModel.setSeason(season)
             raceListViewModel.refreshRaces(false)
         }
+    }
+
+    private fun isRefreshing() {
+        binding.swipeRefreshRaceList.isRefreshing =
+            seasonViewModel.isRefreshing.value == true
+                    || raceListViewModel.isRefreshing.value == true
     }
 }

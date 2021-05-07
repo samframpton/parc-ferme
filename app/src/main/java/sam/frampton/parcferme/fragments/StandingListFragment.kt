@@ -14,6 +14,7 @@ import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
 import sam.frampton.parcferme.adapters.DriverStandingAdapter
 import sam.frampton.parcferme.databinding.FragmentStandingListBinding
 import sam.frampton.parcferme.fragments.StandingListFragment.StandingType.*
+import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 import sam.frampton.parcferme.viewmodels.StandingListViewModel
 
@@ -23,6 +24,7 @@ class StandingListFragment : Fragment() {
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val standingListViewModel: StandingListViewModel by activityViewModels()
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
     private val args: StandingListFragmentArgs by navArgs()
     private lateinit var binding: FragmentStandingListBinding
     private lateinit var driverAdapter: DriverStandingAdapter
@@ -34,6 +36,7 @@ class StandingListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStandingListBinding.inflate(layoutInflater)
+        setSeason(args.season)
         setupRecyclerView()
         setupChips()
         setupObservers()
@@ -59,6 +62,7 @@ class StandingListFragment : Fragment() {
             findNavController().navigate(directions)
         }
         binding.rvStandingList.setOrientedLayoutManager()
+        binding.swipeRefreshStandingList.setOnRefreshListener { refresh() }
     }
 
     private fun setupChips() {
@@ -106,28 +110,70 @@ class StandingListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        if (args.season != -1) {
-            setSeason(args.season)
-        }
         seasonViewModel.seasons.observe(viewLifecycleOwner) { seasons ->
-            if (seasons.isNotEmpty()) {
-                setSeason(standingListViewModel.season ?: seasons.first())
+            if (seasons.isNotEmpty()) setSeason(standingListViewModel.season ?: seasons.first())
+        }
+        seasonViewModel.isRefreshing.observe(viewLifecycleOwner) { isRefreshing() }
+
+        standingListViewModel.driverStandingList.observe(
+            viewLifecycleOwner,
+            driverAdapter::submitList
+        )
+        standingListViewModel.driverStandingRefreshResult
+            .observe(viewLifecycleOwner) { refreshResult ->
+                refreshResult?.let {
+                    mainActivityViewModel.setRefreshResult(refreshResult)
+                    standingListViewModel.clearDriverStandingRefreshResult()
+                }
             }
+        standingListViewModel.driverStandingIsRefreshing.observe(viewLifecycleOwner) {
+            isRefreshing()
         }
-        standingListViewModel.driverStandingList.observe(viewLifecycleOwner) {
-            driverAdapter.submitList(it)
+
+        standingListViewModel.constructorStandingList.observe(
+            viewLifecycleOwner,
+            constructorAdapter::submitList
+        )
+        standingListViewModel.constructorStandingRefreshResult
+            .observe(viewLifecycleOwner) { refreshResult ->
+                refreshResult?.let {
+                    mainActivityViewModel.setRefreshResult(refreshResult)
+                    standingListViewModel.clearConstructorStandingRefreshResult()
+                }
+            }
+        standingListViewModel.constructorStandingIsRefreshing.observe(viewLifecycleOwner) {
+            isRefreshing()
         }
-        standingListViewModel.constructorStandingList.observe(viewLifecycleOwner) {
-            constructorAdapter.submitList(it)
+
+        mainActivityViewModel.menuRefresh.observe(viewLifecycleOwner) { refresh ->
+            if (refresh == true) {
+                refresh()
+                mainActivityViewModel.clearMenuRefresh()
+            }
         }
     }
 
+    private fun refresh() {
+        seasonViewModel.refreshSeasons(true)
+        standingListViewModel.refreshDriverStandings(true)
+        standingListViewModel.refreshConstructorStandings(true)
+    }
+
     private fun setSeason(season: Int) {
-        binding.chipStandingListSeason.text = season.toString()
-        if (standingListViewModel.season != season) {
-            standingListViewModel.setSeason(season)
-            standingListViewModel.refreshDriverStandings(false)
-            standingListViewModel.refreshConstructorStandings(false)
+        if (season != -1) {
+            binding.chipStandingListSeason.text = season.toString()
+            if (standingListViewModel.season != season) {
+                standingListViewModel.setSeason(season)
+                standingListViewModel.refreshDriverStandings(false)
+                standingListViewModel.refreshConstructorStandings(false)
+            }
         }
+    }
+
+    private fun isRefreshing() {
+        binding.swipeRefreshStandingList.isRefreshing =
+            seasonViewModel.isRefreshing.value == true
+                    || standingListViewModel.driverStandingIsRefreshing.value == true
+                    || standingListViewModel.constructorStandingIsRefreshing.value == true
     }
 }

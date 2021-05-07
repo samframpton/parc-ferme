@@ -1,10 +1,7 @@
 package sam.frampton.parcferme.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import sam.frampton.parcferme.data.Constructor
 import sam.frampton.parcferme.data.ConstructorStanding
@@ -15,29 +12,48 @@ class ConstructorDetailViewModel(application: Application) : AndroidViewModel(ap
 
     private val repository = StandingRepository(application)
 
-    private val _networkError = MutableLiveData(false)
-    val networkError: LiveData<Boolean>
-        get() = _networkError
-    private val _otherError = MutableLiveData(false)
-    val otherError: LiveData<Boolean>
-        get() = _otherError
+    var constructor: Constructor? = null
+        private set
+    private val _standingList = MediatorLiveData<List<ConstructorStanding>>()
+    val standingList: LiveData<List<ConstructorStanding>>
+        get() = _standingList
+    private var constructorStandingList: LiveData<List<ConstructorStanding>>? = null
 
-    fun getConstructorStandings(constructor: Constructor): LiveData<List<ConstructorStanding>> {
-        viewModelScope.launch {
-            when (repository.refreshConstructorStandingsByConstructor(constructor.constructorId)) {
-                RefreshResult.NETWORK_ERROR -> _networkError.postValue(true)
-                RefreshResult.OTHER_ERROR -> _otherError.postValue(true)
-                RefreshResult.SUCCESS -> {
-                }
-                RefreshResult.CACHE -> {
-                }
-            }
+    private val _refreshResult: MutableLiveData<RefreshResult> = MutableLiveData()
+    val refreshResult: LiveData<RefreshResult>
+        get() = _refreshResult
+    private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+    val isRefreshing: LiveData<Boolean>
+        get() = _isRefreshing
+
+    fun setConstructor(constructor: Constructor) {
+        this.constructor = constructor
+        constructorStandingList?.let { _standingList.removeSource(it) }
+        repository.getConstructorStandingsByConstructor(constructor.constructorId).also {
+            constructorStandingList = it
+            _standingList.addSource(it) { standings -> _standingList.value = standings }
         }
-        return repository.getConstructorStandingsByConstructor(constructor.constructorId)
     }
 
-    fun clearErrors() {
-        _networkError.value = false
-        _otherError.value = false
+    fun refreshConstructorStandings(force: Boolean) {
+        constructor?.let { constructor ->
+            _isRefreshing.value = true
+            viewModelScope.launch {
+                _refreshResult.value = repository.refreshConstructorStandingsByConstructor(
+                    constructor.constructorId,
+                    force
+                )
+                _isRefreshing.value = false
+            }
+        }
+    }
+
+    fun clearRefreshResult() {
+        _refreshResult.value = null
+    }
+
+    override fun onCleared() {
+        constructorStandingList?.let { _standingList.removeSource(it) }
+        constructorStandingList = null
     }
 }
