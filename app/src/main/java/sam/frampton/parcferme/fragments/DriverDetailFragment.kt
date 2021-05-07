@@ -53,6 +53,7 @@ class DriverDetailFragment : Fragment() {
         binding.swipeRefreshDriverDetail.setOnRefreshListener {
             driverDetailViewModel.refreshDriverStandings(true)
         }
+        binding.swipeRefreshDriverDetail.setColor()
     }
 
     private fun setupObservers() {

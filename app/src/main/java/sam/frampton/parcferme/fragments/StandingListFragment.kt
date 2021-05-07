@@ -62,6 +62,7 @@ class StandingListFragment : Fragment() {
         }
         binding.rvStandingList.setOrientedLayoutManager()
         binding.swipeRefreshStandingList.setOnRefreshListener { refresh() }
+        binding.swipeRefreshStandingList.setColor()
     }
 
     private fun setupChips() {

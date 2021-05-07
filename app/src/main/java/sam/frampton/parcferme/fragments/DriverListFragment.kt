@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -47,6 +48,7 @@ class DriverListFragment : Fragment() {
         binding.rvDriverList.adapter = driverAdapter
         binding.rvDriverList.setOrientedLayoutManager()
         binding.swipeRefreshDriverList.setOnRefreshListener { refresh() }
+        binding.swipeRefreshDriverList.setColor()
     }
 
     private fun setupChips() {
