@@ -37,16 +37,11 @@ class DriverListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         driverAdapter = DriverAdapter { driver ->
-            val title = driver.permanentNumber?.let {
-                getString(
-                    R.string.driver_full_name_and_number,
-                    driver.permanentNumber,
-                    driver.givenName,
-                    driver.familyName
-                )
-            } ?: getString(R.string.driver_full_name, driver.givenName, driver.familyName)
             val directions = DriverListFragmentDirections
-                .actionDriverListFragmentToDriverDetailFragment(driver, title)
+                .actionDriverListFragmentToDriverDetailFragment(
+                    driver,
+                    driver.getTitle(requireContext())
+                )
             findNavController().navigate(directions)
         }
         binding.rvDriverList.adapter = driverAdapter
