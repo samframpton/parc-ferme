@@ -112,8 +112,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/list_item_constructor_detail_standing" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_large"
             app:checkedChip="@id/chip_race_detail_race"
             app:layout_constraintTop_toBottomOf="@id/tv_race_detail_time"
@@ -135,8 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/list_item_race_result" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

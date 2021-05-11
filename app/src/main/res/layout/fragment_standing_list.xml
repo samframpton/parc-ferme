@@ -60,8 +60,8 @@
                 android:id="@+id/rv_standing_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
                 tools:listitem="@layout/list_item_driver_standing" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
