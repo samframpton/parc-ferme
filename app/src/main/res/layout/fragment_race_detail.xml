@@ -2,7 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragments.RaceDetailFragment">
+    tools:context=".fragments.RaceDetailFragment"
+    tools:ignore="RtlHardcoded">
 
     <data>
 
@@ -11,22 +12,25 @@
             type="sam.frampton.parcferme.data.Race" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <sam.frampton.parcferme.views.SwipeRefreshMotionLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/motion_scene_race_detail">
 
         <ImageView
             android:id="@+id/iv_race_detail_flag"
-            style="@style/FlagIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
+            android:adjustViewBounds="true"
+            android:background="@drawable/flag_border"
             android:contentDescription="@null"
             app:country="@{race.circuit.country}"
-            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
+            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="RtlHardcoded"
             tools:src="@drawable/ic_at" />
 
         <TextView
@@ -36,75 +40,72 @@
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@{race.circuit.circuitName}"
             android:textSize="@dimen/text_large"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@id/tv_race_detail_date"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintLeft_toRightOf="@id/iv_race_detail_flag"
-            app:layout_constraintRight_toLeftOf="@id/barrier_race_detail_vertical"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="Red Bull Ring" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier_race_detail_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="start"
-            app:constraint_referenced_ids="tv_race_detail_date, tv_race_detail_time" />
 
         <TextView
             android:id="@+id/tv_race_detail_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_large"
             app:dateFull="@{race.date}"
             app:layout_constraintBottom_toTopOf="@id/tv_race_detail_time"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@id/tv_race_detail_circuit"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_race_detail_flag"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_circuit"
             app:layout_goneMarginBottom="@dimen/margin_large"
-            tools:ignore="RtlHardcoded"
             tools:text="05/07/2020" />
 
         <TextView
             android:id="@+id/tv_race_detail_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="@dimen/text_large"
-            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail_horizontal"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@id/tv_race_detail_circuit"
+            app:layout_constraintBottom_toTopOf="@id/barrier_race_detail"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_race_detail_flag"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_race_detail_date"
             app:timeFull="@{race.time}"
-            tools:ignore="RtlHardcoded"
             tools:text="13.10 (UTC)" />
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier_race_detail_horizontal"
+            android:id="@+id/barrier_race_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="iv_race_detail_flag, tv_race_detail_circuit, tv_race_detail_time" />
+            app:constraint_referenced_ids="iv_race_detail_flag, tv_race_detail_time" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_race_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_large"
             app:checkedChip="@id/chip_race_detail_race"
-            app:layout_constraintTop_toBottomOf="@id/tv_race_detail_time"
+            app:layout_constraintTop_toBottomOf="@id/barrier_race_detail"
             app:selectionRequired="true"
             app:singleSelection="true">
 
@@ -133,12 +134,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_race_detail"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingTop="@dimen/margin_medium"
                 android:paddingBottom="@dimen/margin_medium"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/list_item_race_result" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </sam.frampton.parcferme.views.SwipeRefreshMotionLayout>
 </layout>
