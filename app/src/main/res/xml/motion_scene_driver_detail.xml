@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/tools">
+
+    <Transition
+        app:constraintSetEnd="@id/motion_scene_driver_detail_end"
+        app:constraintSetStart="@id/motion_scene_driver_detail_start"
+        motion:duration="1000"
+        motion:motionInterpolator="linear">
+
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/swipe_refresh_driver_detail"
+            app:touchAnchorSide="top" />
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="0"
+                app:motionTarget="@id/tv_driver_detail_nationality" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="20"
+                app:motionTarget="@id/tv_driver_detail_nationality" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="0"
+                app:motionTarget="@id/tv_driver_detail_birth_date" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="20"
+                app:motionTarget="@id/tv_driver_detail_birth_date" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/motion_scene_driver_detail_start" />
+
+    <ConstraintSet android:id="@+id/motion_scene_driver_detail_end">
+        <Constraint
+            android:id="@id/iv_driver_detail_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@id/barrier_driver_detail"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@id/tv_driver_detail_wins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@id/tv_driver_detail_championships"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Constraint
+            android:id="@id/tv_driver_detail_championships"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@id/barrier_driver_detail"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_driver_detail_wins"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Constraint
+            android:id="@id/tv_driver_detail_nationality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tv_driver_detail_birth_date"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_driver_detail_championships"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Constraint
+            android:id="@id/tv_driver_detail_birth_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:visibility="invisible"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toRightOf="@id/iv_driver_detail_flag"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_driver_detail_nationality"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Constraint
+            android:id="@+id/barrier_driver_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_driver_detail_flag, tv_driver_detail_championships" />
+    </ConstraintSet>
+</MotionScene>
