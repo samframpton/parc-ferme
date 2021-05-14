@@ -1,20 +1,30 @@
 package sam.frampton.parcferme.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.work.*
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.QualifyingResultAdapter
 import sam.frampton.parcferme.adapters.RaceResultAdapter
+import sam.frampton.parcferme.data.Race
 import sam.frampton.parcferme.databinding.FragmentRaceDetailBinding
 import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.RaceDetailViewModel
+import sam.frampton.parcferme.workers.RaceReminderWorker
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.concurrent.TimeUnit
 
 class RaceDetailFragment : Fragment() {
 
@@ -24,6 +34,13 @@ class RaceDetailFragment : Fragment() {
     private lateinit var binding: FragmentRaceDetailBinding
     private lateinit var raceResultAdapter: RaceResultAdapter
     private lateinit var qualifyingResultAdapter: QualifyingResultAdapter
+    private lateinit var race: Race
+    private var reminder: Boolean? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +56,9 @@ class RaceDetailFragment : Fragment() {
     }
 
     private fun setRace() {
-        binding.race = args.race
-        raceDetailViewModel.setRace(args.race)
+        race = args.race
+        binding.race = race
+        raceDetailViewModel.setRace(race)
         refresh(false)
     }
 
@@ -112,6 +130,26 @@ class RaceDetailFragment : Fragment() {
                 mainActivityViewModel.clearMenuRefresh()
             }
         }
+
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData("${race.season}${race.round}")
+            .observe(viewLifecycleOwner) { workInfo ->
+                val isEnqueued = workInfo.any { it.state == WorkInfo.State.ENQUEUED }
+                reminder?.let {
+                    val text = if (isEnqueued) {
+                        getString(R.string.race_reminder_on)
+                    } else {
+                        getString(R.string.race_reminder_off)
+                    }
+                    Snackbar.make(binding.root, text, BaseTransientBottomBar.LENGTH_SHORT)
+                        .apply {
+                            anchorView = requireActivity().findViewById(R.id.bottom_navigation)
+                        }
+                        .show()
+                }
+                reminder = isEnqueued
+                requireActivity().invalidateOptionsMenu()
+            }
     }
 
     private fun refresh(force: Boolean) {
@@ -123,5 +161,54 @@ class RaceDetailFragment : Fragment() {
         binding.swipeRefreshRaceDetail.isRefreshing =
             raceDetailViewModel.raceResultIsRefreshing.value == true
                     || raceDetailViewModel.qualifyingResultIsRefreshing.value == true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (race.time != null && millisUntilRace() > 0) {
+            reminder?.let { reminder ->
+                inflater.inflate(R.menu.race_detail_menu, menu)
+                menu.findItem(R.id.menu_race_reminder_off).isVisible = !reminder
+                menu.findItem(R.id.menu_race_reminder_on).isVisible = reminder
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_race_reminder_off -> {
+                addRaceReminder()
+                return true
+            }
+            R.id.menu_race_reminder_on -> {
+                WorkManager.getInstance(requireContext())
+                    .cancelUniqueWork("${race.season}${race.round}")
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun addRaceReminder() {
+        val time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(race.time)
+        val data = workDataOf(
+            RaceReminderWorker.KEY_RACE_SEASON to race.season,
+            RaceReminderWorker.KEY_RACE_NAME to race.raceName,
+            RaceReminderWorker.KEY_RACE_TIME to time
+        )
+        val workRequest = OneTimeWorkRequestBuilder<RaceReminderWorker>()
+            .setInputData(data)
+            .setInitialDelay(millisUntilRace(), TimeUnit.MILLISECONDS)
+            .addTag("${race.season}${race.round}")
+            .build()
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            "${race.season}${race.round}",
+            ExistingWorkPolicy.KEEP,
+            workRequest
+        )
+    }
+
+    private fun millisUntilRace(): Long {
+        val raceDateTime = ZonedDateTime.of(race.date, race.time, ZoneOffset.UTC)
+        return Duration.between(Instant.now(), raceDateTime).toMillis()
     }
 }

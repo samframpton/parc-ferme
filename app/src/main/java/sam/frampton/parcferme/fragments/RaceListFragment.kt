@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.RaceAdapter
@@ -20,6 +21,7 @@ class RaceListFragment : Fragment() {
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val raceListViewModel: RaceListViewModel by activityViewModels()
     private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
+    private val args: RaceListFragmentArgs by navArgs()
     private lateinit var binding: FragmentRaceListBinding
     private lateinit var raceAdapter: RaceAdapter
 
@@ -29,6 +31,7 @@ class RaceListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRaceListBinding.inflate(layoutInflater)
+        setSeason(args.season)
         setupRecyclerView()
         setupChips()
         setupObservers()
@@ -88,10 +91,12 @@ class RaceListFragment : Fragment() {
     }
 
     private fun setSeason(season: Int) {
-        binding.chipRaceListSeason.text = season.toString()
-        if (raceListViewModel.season != season) {
-            raceListViewModel.setSeason(season)
-            raceListViewModel.refreshRaces(false)
+        if (season != -1) {
+            binding.chipRaceListSeason.text = season.toString()
+            if (raceListViewModel.season != season) {
+                raceListViewModel.setSeason(season)
+                raceListViewModel.refreshRaces(false)
+            }
         }
     }
 
