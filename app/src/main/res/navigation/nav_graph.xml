@@ -61,6 +61,10 @@
         <action
             android:id="@+id/action_raceListFragment_to_raceDetailFragment"
             app:destination="@id/raceDetailFragment" />
+        <argument
+            android:name="season"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/raceDetailFragment"
@@ -85,7 +89,7 @@
         <argument
             android:name="standingType"
             android:defaultValue="DEFAULT"
-            app:argType="sam.frampton.parcferme.fragments.StandingListFragment$StandingType" />
+            app:argType=".fragments.StandingListFragment$StandingType" />
         <argument
             android:name="season"
             android:defaultValue="-1"

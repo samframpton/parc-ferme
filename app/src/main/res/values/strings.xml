@@ -2,9 +2,17 @@
     <string name="app_name">Parc Ferme</string>
 
     <string name="menu_refresh">Refresh</string>
+    <string name="menu_race_reminder_off">Turn on race reminder</string>
+    <string name="menu_race_reminder_on">Turn off race reminder</string>
+
+    <string name="race_reminder_on">Race reminder on</string>
+    <string name="race_reminder_off">Race reminder off</string>
 
     <string name="network_error_message">Could not refresh data. A network error occurred.</string>
     <string name="other_error_message">Could not refresh data. An error occurred.</string>
+
+    <string name="channel_id_race_reminders">race reminders</string>
+    <string name="channel_name_race_reminders">Race Reminders</string>
 
     <string name="season">Season</string>
     <string name="drivers">Drivers</string>
