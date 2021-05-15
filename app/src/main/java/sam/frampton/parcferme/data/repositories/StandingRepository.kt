@@ -11,6 +11,10 @@ import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
+import sam.frampton.parcferme.database.entities.ConstructorEntity
+import sam.frampton.parcferme.database.entities.ConstructorStandingEntity
+import sam.frampton.parcferme.database.entities.DriverEntity
+import sam.frampton.parcferme.database.entities.DriverStandingEntity
 import java.io.IOException
 
 private const val LOG_TAG = "StandingRepository"
@@ -89,15 +93,19 @@ class StandingRepository(val context: Context) {
 
     private fun cacheApiDriverStandings(response: ErgastResponse): RefreshResult =
         response.motorRacingData.standingsTable?.standingsLists?.let { standingsLists ->
+            val driverStandingList =
+                ArrayList<Pair<DriverStandingEntity, List<ConstructorEntity>>>()
+            val driverList = ArrayList<DriverEntity>()
             standingsLists.forEach { standingsList ->
                 standingsList.driverStandings?.forEach { driverStanding ->
-                    standingDao.insertDriverStanding(
-                        driverStanding.toDriverStandingEntity(standingsList.season),
-                        driverStanding.driver.toDriverEntity(),
-                        driverStanding.constructors.toConstructorEntityList()
+                    driverStandingList.add(
+                        driverStanding.toDriverStandingEntity(standingsList.season) to
+                                driverStanding.constructors.toConstructorEntityList()
                     )
+                    driverList.add(driverStanding.driver.toDriverEntity())
                 }
             }
+            standingDao.insertDriverStandings(driverStandingList, driverList)
             return RefreshResult.SUCCESS
         } ?: RefreshResult.OTHER_ERROR
 
@@ -176,14 +184,17 @@ class StandingRepository(val context: Context) {
 
     private fun cacheApiConstructorStandings(response: ErgastResponse): RefreshResult =
         response.motorRacingData.standingsTable?.standingsLists?.let { standingsLists ->
+            val constructorStandingList = ArrayList<ConstructorStandingEntity>()
+            val constructorList = ArrayList<ConstructorEntity>()
             standingsLists.forEach { standingsList ->
                 standingsList.constructorStandings?.forEach { constructorStanding ->
-                    standingDao.insertConstructorStanding(
-                        constructorStanding.toConstructorStandingEntity(standingsList.season),
-                        constructorStanding.constructor.toConstructorEntity()
+                    constructorStandingList.add(
+                        constructorStanding.toConstructorStandingEntity(standingsList.season)
                     )
+                    constructorList.add(constructorStanding.constructor.toConstructorEntity())
                 }
             }
+            standingDao.insertConstructorStandings(constructorStandingList, constructorList)
             return RefreshResult.SUCCESS
         } ?: RefreshResult.OTHER_ERROR
 }

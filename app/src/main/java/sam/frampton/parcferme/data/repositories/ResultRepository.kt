@@ -11,6 +11,10 @@ import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
+import sam.frampton.parcferme.database.entities.ConstructorEntity
+import sam.frampton.parcferme.database.entities.DriverEntity
+import sam.frampton.parcferme.database.entities.QualifyingResultEntity
+import sam.frampton.parcferme.database.entities.RaceResultEntity
 import java.io.IOException
 
 private const val LOG_TAG = "ResultRepository"
@@ -57,13 +61,15 @@ class ResultRepository(val context: Context) {
 
     private fun cacheApiRaceResults(response: ErgastResponse): RefreshResult =
         response.motorRacingData.raceTable?.races?.firstOrNull()?.let { race ->
-            race.results.forEach {
-                resultDao.insertRaceResult(
-                    it.toRaceResultEntity(race.season, race.round),
-                    it.driver.toDriverEntity(),
-                    it.constructor.toConstructorEntity()
-                )
+            val raceResultList = ArrayList<RaceResultEntity>()
+            val driverList = ArrayList<DriverEntity>()
+            val constructorList = ArrayList<ConstructorEntity>()
+            race.results.forEach { result ->
+                raceResultList.add(result.toRaceResultEntity(race.season, race.round))
+                driverList.add(result.driver.toDriverEntity())
+                constructorList.add(result.constructor.toConstructorEntity())
             }
+            resultDao.insertRaceResults(raceResultList, driverList, constructorList)
             RefreshResult.SUCCESS
         } ?: RefreshResult.OTHER_ERROR
 
@@ -110,13 +116,15 @@ class ResultRepository(val context: Context) {
 
     private fun cacheApiQualifyingResults(response: ErgastResponse): RefreshResult =
         response.motorRacingData.raceTable?.races?.firstOrNull()?.let { race ->
-            race.qualifyingResults.forEach {
-                resultDao.insertQualifyingResult(
-                    it.toQualifyingResultEntity(race.season, race.round),
-                    it.driver.toDriverEntity(),
-                    it.constructor.toConstructorEntity()
-                )
+            val qualifyingResultList = ArrayList<QualifyingResultEntity>()
+            val driverList = ArrayList<DriverEntity>()
+            val constructorList = ArrayList<ConstructorEntity>()
+            race.qualifyingResults.forEach { result ->
+                qualifyingResultList.add(result.toQualifyingResultEntity(race.season, race.round))
+                driverList.add(result.driver.toDriverEntity())
+                constructorList.add(result.constructor.toConstructorEntity())
             }
+            resultDao.insertQualifyingResults(qualifyingResultList, driverList, constructorList)
             RefreshResult.SUCCESS
         } ?: RefreshResult.OTHER_ERROR
 }

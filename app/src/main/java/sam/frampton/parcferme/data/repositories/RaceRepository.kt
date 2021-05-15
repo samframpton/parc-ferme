@@ -11,6 +11,8 @@ import sam.frampton.parcferme.api.ErgastService
 import sam.frampton.parcferme.api.dtos.ErgastResponse
 import sam.frampton.parcferme.data.*
 import sam.frampton.parcferme.database.AppDatabase
+import sam.frampton.parcferme.database.entities.CircuitEntity
+import sam.frampton.parcferme.database.entities.RaceEntity
 import java.io.IOException
 
 private const val LOG_TAG = "RaceRepository"
@@ -50,7 +52,13 @@ class RaceRepository(val context: Context) {
 
     private fun cacheApiRaces(response: ErgastResponse): RefreshResult =
         response.motorRacingData.raceTable?.races?.let { races ->
-            races.forEach { raceDao.insertRace(it.toRaceEntity(), it.circuit.toCircuitEntity()) }
+            val raceList = ArrayList<RaceEntity>()
+            val circuitList = ArrayList<CircuitEntity>()
+            races.forEach { race ->
+                raceList.add(race.toRaceEntity())
+                circuitList.add(race.circuit.toCircuitEntity())
+            }
+            raceDao.insertRaces(raceList, circuitList)
             RefreshResult.SUCCESS
         } ?: RefreshResult.OTHER_ERROR
 }
