@@ -8,8 +8,8 @@
     <string name="race_reminder_on">Race reminder on</string>
     <string name="race_reminder_off">Race reminder off</string>
 
-    <string name="network_error_message">Could not refresh data. A network error occurred.</string>
-    <string name="other_error_message">Could not refresh data. An error occurred.</string>
+    <string name="error_message_network">Could not refresh data. Check your network connection.</string>
+    <string name="error_message_other">Could not refresh data. An error occurred.</string>
 
     <string name="channel_id_race_reminders">race reminders</string>
     <string name="channel_name_race_reminders">Race Reminders</string>

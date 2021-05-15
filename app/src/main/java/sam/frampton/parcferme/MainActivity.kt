@@ -53,32 +53,29 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservers() {
         seasonViewModel.refreshResult.observe(this) { refreshResult ->
             refreshResult?.let {
-                when (refreshResult) {
-                    RefreshResult.NETWORK_ERROR -> showError(R.string.network_error_message)
-                    RefreshResult.OTHER_ERROR -> showError(R.string.other_error_message)
-                    else -> {
-                    }
-                }
+                showError(refreshResult)
                 seasonViewModel.clearRefreshResult()
             }
         }
         mainActivityViewModel.refreshResult.observe(this) { refreshResult ->
             refreshResult?.let {
-                when (refreshResult) {
-                    RefreshResult.NETWORK_ERROR -> showError(R.string.network_error_message)
-                    RefreshResult.OTHER_ERROR -> showError(R.string.other_error_message)
-                    else -> {
-                    }
-                }
+                showError(refreshResult)
                 mainActivityViewModel.clearRefreshResult()
             }
         }
     }
 
-    private fun showError(text: Int) =
+    private fun showError(refreshResult: RefreshResult) {
+        val text =
+            when (refreshResult) {
+                RefreshResult.NETWORK_ERROR -> R.string.error_message_network
+                RefreshResult.OTHER_ERROR -> R.string.error_message_other
+                else -> return
+            }
         Snackbar.make(binding.root, text, BaseTransientBottomBar.LENGTH_LONG)
             .apply { anchorView = binding.bottomNavigation }
             .show()
+    }
 
     override fun onSupportNavigateUp(): Boolean =
         navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
