@@ -71,7 +71,7 @@ class ResultRepository(val context: Context) {
             }
             resultDao.insertRaceResults(raceResultList, driverList, constructorList)
             RefreshResult.SUCCESS
-        } ?: RefreshResult.OTHER_ERROR
+        } ?: RefreshResult.NO_RACE_DATA
 
     fun getQualifyingResults(season: Int, round: Int): LiveData<List<QualifyingResult>> =
         Transformations.map(resultDao.getQualifyingResultsBySeasonRound(season, round)) { results ->
@@ -126,5 +126,5 @@ class ResultRepository(val context: Context) {
             }
             resultDao.insertQualifyingResults(qualifyingResultList, driverList, constructorList)
             RefreshResult.SUCCESS
-        } ?: RefreshResult.OTHER_ERROR
+        } ?: RefreshResult.NO_RACE_DATA
 }
