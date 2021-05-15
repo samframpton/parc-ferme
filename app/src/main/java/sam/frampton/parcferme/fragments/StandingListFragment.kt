@@ -36,6 +36,7 @@ class StandingListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStandingListBinding.inflate(layoutInflater)
+        seasonViewModel.refreshSeasons(false)
         setSeason(args.season)
         setupRecyclerView()
         setupChips()

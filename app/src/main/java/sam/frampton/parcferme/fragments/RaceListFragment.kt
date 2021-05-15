@@ -31,6 +31,7 @@ class RaceListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRaceListBinding.inflate(layoutInflater)
+        seasonViewModel.refreshSeasons(false)
         setSeason(args.season)
         setupRecyclerView()
         setupChips()

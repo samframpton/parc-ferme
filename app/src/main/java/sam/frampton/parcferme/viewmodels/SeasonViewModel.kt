@@ -22,10 +22,6 @@ class SeasonViewModel(application: Application) : AndroidViewModel(application) 
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
 
-    init {
-        refreshSeasons(false)
-    }
-
     fun refreshSeasons(force: Boolean) {
         _isRefreshing.value = true
         viewModelScope.launch {

@@ -29,6 +29,7 @@ class ConstructorListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentConstructorListBinding.inflate(layoutInflater)
+        seasonViewModel.refreshSeasons(false)
         setupRecyclerView()
         setupChips()
         setupObservers()
