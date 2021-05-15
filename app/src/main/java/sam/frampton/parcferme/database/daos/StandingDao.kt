@@ -27,28 +27,29 @@ abstract class StandingDao {
             LiveData<List<ConstructorStandingAndConstructor>>
 
     @Transaction
-    open fun insertDriverStanding(
-        driverStanding: DriverStandingEntity,
-        driver: DriverEntity,
-        constructors: List<ConstructorEntity>
+    open fun insertDriverStandings(
+        driverStandings: List<Pair<DriverStandingEntity, List<ConstructorEntity>>>,
+        drivers: List<DriverEntity>
     ) {
-        insertDriver(driver)
-        val driverStandingId = insertDriverStanding(driverStanding)
-        constructors.forEach {
-            insertConstructor(it)
-            insertDriverStandingConstructorCrossRef(
-                DriverStandingConstructorCrossRef(driverStandingId, it.constructorId)
-            )
+        insertDrivers(drivers)
+        driverStandings.forEach { pair ->
+            val driverStandingId = insertDriverStanding(pair.first)
+            insertConstructors(pair.second)
+            pair.second.forEach {
+                insertDriverStandingConstructorCrossRef(
+                    DriverStandingConstructorCrossRef(driverStandingId, it.constructorId)
+                )
+            }
         }
     }
 
     @Transaction
-    open fun insertConstructorStanding(
-        constructorStanding: ConstructorStandingEntity,
-        constructor: ConstructorEntity
+    open fun insertConstructorStandings(
+        constructorStandings: List<ConstructorStandingEntity>,
+        constructors: List<ConstructorEntity>
     ) {
-        insertConstructor(constructor)
-        insertConstructorStanding(constructorStanding)
+        insertConstructors(constructors)
+        insertConstructorStandings(constructorStandings)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -60,11 +61,13 @@ abstract class StandingDao {
     )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertConstructorStanding(constructorStanding: ConstructorStandingEntity)
+    protected abstract fun insertConstructorStandings(
+        constructorStandings: List<ConstructorStandingEntity>
+    )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertDriver(driver: DriverEntity)
+    protected abstract fun insertDrivers(drivers: List<DriverEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertConstructor(constructor: ConstructorEntity)
+    protected abstract fun insertConstructors(constructors: List<ConstructorEntity>)
 }

@@ -17,36 +17,36 @@ abstract class ResultDao {
             LiveData<List<QualifyingResultAndDriverConstructor>>
 
     @Transaction
-    open fun insertRaceResult(
-        raceResult: RaceResultEntity,
-        driver: DriverEntity,
-        constructor: ConstructorEntity,
+    open fun insertRaceResults(
+        raceResults: List<RaceResultEntity>,
+        drivers: List<DriverEntity>,
+        constructors: List<ConstructorEntity>
     ) {
-        insertDriver(driver)
-        insertConstructor(constructor)
-        insertRaceResult(raceResult)
+        insertDrivers(drivers)
+        insertConstructors(constructors)
+        insertRaceResults(raceResults)
     }
 
     @Transaction
-    open fun insertQualifyingResult(
-        qualifyingResult: QualifyingResultEntity,
-        driver: DriverEntity,
-        constructor: ConstructorEntity
+    open fun insertQualifyingResults(
+        qualifyingResults: List<QualifyingResultEntity>,
+        drivers: List<DriverEntity>,
+        constructors: List<ConstructorEntity>
     ) {
-        insertDriver(driver)
-        insertConstructor(constructor)
-        insertQualifyingResult(qualifyingResult)
+        insertDrivers(drivers)
+        insertConstructors(constructors)
+        insertQualifyingResults(qualifyingResults)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertDriver(driver: DriverEntity)
+    protected abstract fun insertDrivers(drivers: List<DriverEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertConstructor(constructor: ConstructorEntity)
+    protected abstract fun insertConstructors(constructors: List<ConstructorEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertRaceResult(raceResult: RaceResultEntity)
+    protected abstract fun insertRaceResults(raceResults: List<RaceResultEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertQualifyingResult(qualifyingResult: QualifyingResultEntity)
+    protected abstract fun insertQualifyingResults(qualifyingResults: List<QualifyingResultEntity>)
 }

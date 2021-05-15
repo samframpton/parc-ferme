@@ -13,14 +13,14 @@ abstract class RaceDao {
     abstract fun getRacesBySeason(season: Int): LiveData<List<RaceAndCircuit>>
 
     @Transaction
-    open fun insertRace(race: RaceEntity, circuit: CircuitEntity) {
-        insertCircuit(circuit)
-        insertRace(race)
+    open fun insertRaces(races: List<RaceEntity>, circuits: List<CircuitEntity>) {
+        insertCircuits(circuits)
+        insertRaces(races)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertCircuit(circuit: CircuitEntity)
+    protected abstract fun insertCircuits(circuits: List<CircuitEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertRace(race: RaceEntity)
+    protected abstract fun insertRaces(races: List<RaceEntity>)
 }
