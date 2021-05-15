@@ -8,6 +8,7 @@
     <string name="race_reminder_on">Race reminder on</string>
     <string name="race_reminder_off">Race reminder off</string>
 
+    <string name="error_no_race_data">No data is available for this race.</string>
     <string name="error_message_network">Could not refresh data. Check your network connection.</string>
     <string name="error_message_other">Could not refresh data. An error occurred.</string>
 

@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     private fun showError(refreshResult: RefreshResult) {
         val text =
             when (refreshResult) {
+                RefreshResult.NO_RACE_DATA -> R.string.error_no_race_data
                 RefreshResult.NETWORK_ERROR -> R.string.error_message_network
                 RefreshResult.OTHER_ERROR -> R.string.error_message_other
                 else -> return
