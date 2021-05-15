@@ -189,7 +189,10 @@ class RaceDetailFragment : Fragment() {
     }
 
     private fun addRaceReminder() {
-        val time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(race.time)
+        val time = getString(
+            R.string.time_full,
+            DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(race.time)
+        )
         val data = workDataOf(
             RaceReminderWorker.KEY_RACE_SEASON to race.season,
             RaceReminderWorker.KEY_RACE_NAME to race.raceName,
