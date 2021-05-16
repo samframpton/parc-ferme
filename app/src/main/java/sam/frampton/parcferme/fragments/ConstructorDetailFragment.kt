@@ -36,6 +36,7 @@ class ConstructorDetailFragment : Fragment() {
 
     private fun setConstructor() {
         binding.constructor = args.constructor
+        binding.constructorStandings = emptyList()
         constructorDetailViewModel.setConstructor(args.constructor)
         constructorDetailViewModel.refreshConstructorStandings(false)
     }
@@ -59,11 +60,9 @@ class ConstructorDetailFragment : Fragment() {
 
     private fun setupObservers() {
         constructorDetailViewModel.standingList.observe(viewLifecycleOwner) { standings ->
-            if (standings.isNotEmpty()) {
-                constructorAdapter.submitList(standings)
-                binding.constructorStandings = standings
-                binding.executePendingBindings()
-            }
+            constructorAdapter.submitList(standings)
+            binding.constructorStandings = standings
+            binding.executePendingBindings()
         }
         constructorDetailViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
             refreshResult?.let {
