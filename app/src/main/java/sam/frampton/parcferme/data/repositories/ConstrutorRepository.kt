@@ -28,7 +28,7 @@ class ConstructorRepository(val context: Context) {
             swc.constructors.toConstructorList().sortedBy { it.name }
         }
 
-    suspend fun refreshConstructors(season: Int, force: Boolean = false): RefreshResult =
+    suspend fun refreshConstructors(season: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val constructorKey = context.getString(R.string.constructor_timestamp_key)
             if (!force && timestampManager.isCacheValid(constructorKey, season.toString())) {
@@ -53,9 +53,9 @@ class ConstructorRepository(val context: Context) {
 
     private fun cacheApiConstructors(response: ErgastResponse): RefreshResult =
         response.motorRacingData.constructorTable?.let { constructorTable ->
-            constructorTable.season?.let {
+            constructorTable.season?.let { season ->
                 constructorDao.insertConstructorsBySeason(
-                    it,
+                    season,
                     constructorTable.constructors.toConstructorEntityList()
                 )
                 RefreshResult.SUCCESS

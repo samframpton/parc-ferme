@@ -24,14 +24,14 @@ class DriverRepository(val context: Context) {
     private val timestampManager = TimestampManager(context)
 
     fun getDrivers(season: Int): LiveData<List<Driver>> =
-        Transformations.map(driverDao.getDriversBySeason(season)) {
+        Transformations.map(driverDao.getDriversBySeason(season)) { swd ->
             val comparator =
                 Comparator.comparing(Driver::familyName, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(Driver::givenName, String.CASE_INSENSITIVE_ORDER)
-            it.drivers.toDriverList().sortedWith(comparator)
+            swd.drivers.toDriverList().sortedWith(comparator)
         }
 
-    suspend fun refreshDrivers(season: Int, force: Boolean = false): RefreshResult =
+    suspend fun refreshDrivers(season: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val driverKey = context.getString(R.string.driver_timestamp_key)
             if (!force && timestampManager.isCacheValid(driverKey, season.toString())) {
@@ -56,8 +56,8 @@ class DriverRepository(val context: Context) {
 
     private fun cacheApiDrivers(response: ErgastResponse): RefreshResult =
         response.motorRacingData.driverTable?.let { driverTable ->
-            driverTable.season?.let {
-                driverDao.insertDriversBySeason(it, driverTable.drivers.toDriverEntityList())
+            driverTable.season?.let { season ->
+                driverDao.insertDriversBySeason(season, driverTable.drivers.toDriverEntityList())
                 RefreshResult.SUCCESS
             }
         } ?: RefreshResult.OTHER_ERROR

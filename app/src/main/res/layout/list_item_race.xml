@@ -21,9 +21,9 @@
 
         <ImageView
             android:id="@+id/iv_list_item_race_flag"
-            style="@style/FlagIcon"
+            style="@style/FlagIconSmall"
             android:contentDescription="@null"
-            app:country="@{race.circuit.country}"
+            app:countryFlag="@{race.circuit.country}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{race.raceName}"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_medium"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/tv_list_item_race_circuit"
             app:layout_constraintHorizontal_bias="0.0"

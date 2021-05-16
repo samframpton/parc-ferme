@@ -6,8 +6,8 @@ import kotlinx.coroutines.launch
 import sam.frampton.parcferme.data.ConstructorStanding
 import sam.frampton.parcferme.data.DriverStanding
 import sam.frampton.parcferme.data.RefreshResult
+import sam.frampton.parcferme.data.StandingType
 import sam.frampton.parcferme.data.repositories.StandingRepository
-import sam.frampton.parcferme.fragments.StandingListFragment
 
 class StandingListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,7 +15,7 @@ class StandingListViewModel(application: Application) : AndroidViewModel(applica
 
     var season: Int? = null
         private set
-    var standingType: StandingListFragment.StandingType = StandingListFragment.StandingType.DEFAULT
+    var standingType: StandingType = StandingType.DEFAULT
 
     private val _driverStandingList = MediatorLiveData<List<DriverStanding>>()
     val driverStandingList: LiveData<List<DriverStanding>>

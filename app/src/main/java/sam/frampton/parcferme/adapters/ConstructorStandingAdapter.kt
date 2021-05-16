@@ -29,29 +29,23 @@ class ConstructorStandingAdapter(private val onClick: (ConstructorStanding) -> U
         override fun areItemsTheSame(
             oldItem: ConstructorStanding,
             newItem: ConstructorStanding
-        ): Boolean {
-            return oldItem.constructor.constructorId == newItem.constructor.constructorId
-        }
+        ): Boolean = oldItem.constructor.constructorId == newItem.constructor.constructorId
 
         override fun areContentsTheSame(
             oldItem: ConstructorStanding,
             newItem: ConstructorStanding
-        ): Boolean {
-            return oldItem == newItem
-        }
+        ): Boolean = oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             ListItemConstructorStandingBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-        return ViewHolder(binding)
-    }
+        )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

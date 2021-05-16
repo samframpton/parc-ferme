@@ -25,7 +25,7 @@ class SeasonRepository(val context: Context) {
     fun getSeasons(): LiveData<List<Int>> =
         Transformations.map(seasonDao.getSeasons()) { it.toSeasonList() }
 
-    suspend fun refreshSeasons(force: Boolean = false): RefreshResult =
+    suspend fun refreshSeasons(force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val seasonKey = context.getString(R.string.season_timestamp_key)
             if (!force && timestampManager.isCacheValid(seasonKey)) {

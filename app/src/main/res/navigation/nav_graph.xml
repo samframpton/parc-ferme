@@ -58,13 +58,13 @@
         android:name="sam.frampton.parcferme.fragments.RaceListFragment"
         android:label="@string/races"
         tools:layout="@layout/fragment_race_list">
-        <action
-            android:id="@+id/action_raceListFragment_to_raceDetailFragment"
-            app:destination="@id/raceDetailFragment" />
         <argument
             android:name="season"
             android:defaultValue="-1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_raceListFragment_to_raceDetailFragment"
+            app:destination="@id/raceDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/raceDetailFragment"
@@ -89,7 +89,7 @@
         <argument
             android:name="standingType"
             android:defaultValue="DEFAULT"
-            app:argType=".fragments.StandingListFragment$StandingType" />
+            app:argType=".data.StandingType" />
         <argument
             android:name="season"
             android:defaultValue="-1"

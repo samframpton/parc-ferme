@@ -29,7 +29,7 @@ class ResultRepository(val context: Context) {
             results.toRaceResultList().sortedBy { it.position }
         }
 
-    suspend fun refreshRaceResults(season: Int, round: Int, force: Boolean = false): RefreshResult =
+    suspend fun refreshRaceResults(season: Int, round: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val raceKey = context.getString(R.string.race_result_timestamp_key)
             if (!force && timestampManager.isCacheValid(raceKey, season.toString())) {
@@ -78,11 +78,7 @@ class ResultRepository(val context: Context) {
             results.toQualifyingResultList().sortedBy { it.position }
         }
 
-    suspend fun refreshQualifyingResults(
-        season: Int,
-        round: Int,
-        force: Boolean = false
-    ): RefreshResult =
+    suspend fun refreshQualifyingResults(season: Int, round: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val qualifyingKey = context.getString(R.string.qualifying_result_timestamp_key)
             if (!force &&

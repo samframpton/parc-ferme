@@ -13,7 +13,7 @@ class ConstructorDetailStandingAdapter(private val onClick: (ConstructorStanding
 
     inner class ViewHolder(private val binding: ListItemConstructorDetailStandingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var constructorStanding: ConstructorStanding? = null
+        private var constructorStanding: ConstructorStanding? = null
 
         init {
             binding.root.setOnClickListener { constructorStanding?.let { onClick(it) } }
@@ -26,28 +26,26 @@ class ConstructorDetailStandingAdapter(private val onClick: (ConstructorStanding
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<ConstructorStanding>() {
-        override fun areItemsTheSame(oldItem: ConstructorStanding, newItem: ConstructorStanding):
-                Boolean {
-            return oldItem.season == newItem.season
-        }
+        override fun areItemsTheSame(
+            oldItem: ConstructorStanding,
+            newItem: ConstructorStanding
+        ): Boolean = oldItem.season == newItem.season
 
-        override fun areContentsTheSame(oldItem: ConstructorStanding, newItem: ConstructorStanding):
-                Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(
+            oldItem: ConstructorStanding,
+            newItem: ConstructorStanding
+        ): Boolean = oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             ListItemConstructorDetailStandingBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-        return ViewHolder(binding)
-    }
+        )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

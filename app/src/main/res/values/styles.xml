@@ -3,8 +3,19 @@
 
     <style name="FlagIcon">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">32dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:background">@drawable/flag_border</item>
+    </style>
+
+    <style name="FlagIconSmall" parent="FlagIcon">
+        <item name="android:layout_height">@dimen/flag_small</item>
+    </style>
+
+    <style name="FlagIconMedium" parent="FlagIcon">
+        <item name="android:layout_height">@dimen/flag_medium</item>
+    </style>
+
+    <style name="FlagIconLarge" parent="FlagIcon">
+        <item name="android:layout_height">@dimen/flag_large</item>
     </style>
 </resources>

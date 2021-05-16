@@ -1,5 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Parc Ferme</string>
+
+    <string name="season">Season</string>
+    <string name="drivers">Drivers</string>
+    <string name="constructors">Constructors</string>
+    <string name="races">Races</string>
+    <string name="race">Race</string>
+    <string name="qualifying">Qualifying</string>
+    <string name="standings">Standings</string>
+
+    <string name="driver_full_name">%1$s %2$s</string>
+    <string name="driver_full_name_and_number">%1$d. %2$s %3$s</string>
+    <string name="birth_date">Born %1$s</string>
+    <plurals name="wins">
+        <item quantity="one">%d Win</item>
+        <item quantity="other">%d Wins</item>
+    </plurals>
+    <plurals name="championships">
+        <item quantity="one">%d Championship</item>
+        <item quantity="other">%d Championships</item>
+    </plurals>
+    <string name="points">%1$s Points</string>
+    <string name="no_time">No Time</string>
+    <string name="time_full">%1$s (UTC)</string>
+
+    <string name="ordinal_one">%1$dst</string>
+    <string name="ordinal_two">%1$dnd</string>
+    <string name="ordinal_three">%1$drd</string>
+    <string name="ordinal_other">%1$dth</string>
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_race_reminder_off">Turn on race reminder</string>
@@ -14,44 +43,6 @@
 
     <string name="channel_id_race_reminders">race reminders</string>
     <string name="channel_name_race_reminders">Race Reminders</string>
-
-    <string name="season">Season</string>
-    <string name="drivers">Drivers</string>
-    <string name="constructors">Constructors</string>
-    <string name="races">Races</string>
-    <string name="standings">Standings</string>
-
-    <string-array name="result_type">
-        <item>Race</item>
-        <item>Qualifying</item>
-    </string-array>
-
-    <string name="race">Race</string>
-    <string name="qualifying">Qualifying</string>
-
-    <string name="no_time">No Time</string>
-
-    <string name="driver_full_name">%1$s %2$s</string>
-    <string name="driver_full_name_and_number">%1$d. %2$s %3$s</string>
-    <string name="birth_date">Born %1$s</string>
-    <string name="time_full">%1$s (UTC)</string>
-
-    <string name="points">%1$s Points</string>
-    <plurals name="wins">
-        <item quantity="one">%d Win</item>
-        <item quantity="other">%d Wins</item>
-    </plurals>
-
-    <string name="ordinal_one">%1$dst</string>
-    <string name="ordinal_two">%1$dnd</string>
-    <string name="ordinal_three">%1$drd</string>
-    <string name="ordinal_other">%1$dth</string>
-
-    <string name="list_season_default">Season</string>
-    <string name="standing_list_drivers">Drivers</string>
-    <string name="standing_list_constructors">Constructors</string>
-
-    <string name="championships">%1$d Championships</string>
 
     <string name="season_timestamp_key">season_cache_timestamp</string>
     <string name="driver_timestamp_key">driver_cache_timestamp</string>

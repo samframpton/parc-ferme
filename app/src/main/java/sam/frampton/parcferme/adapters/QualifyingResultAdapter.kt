@@ -26,27 +26,26 @@ class QualifyingResultAdapter(private val onClick: (QualifyingResult) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<QualifyingResult>() {
-        override fun areItemsTheSame(oldItem: QualifyingResult, newItem: QualifyingResult):
-                Boolean {
-            return oldItem.position == newItem.position
-        }
+        override fun areItemsTheSame(
+            oldItem: QualifyingResult,
+            newItem: QualifyingResult
+        ): Boolean = oldItem.position == newItem.position
 
-        override fun areContentsTheSame(oldItem: QualifyingResult, newItem: QualifyingResult):
-                Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(
+            oldItem: QualifyingResult,
+            newItem: QualifyingResult
+        ): Boolean = oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemQualifyingResultBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            ListItemQualifyingResultBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        return ViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

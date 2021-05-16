@@ -23,18 +23,15 @@
 
         <ImageView
             android:id="@+id/iv_constructor_detail_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            style="@style/FlagIconLarge"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
-            android:adjustViewBounds="true"
-            android:background="@drawable/flag_border"
             android:contentDescription="@null"
             app:layout_constraintBottom_toTopOf="@id/barrier_constructor_detail"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:nationality="@{constructor.nationality}"
+            app:countryFlag="@{constructor.nationality}"
             tools:src="@drawable/ic_gb" />
 
         <TextView
@@ -46,7 +43,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_medium"
             app:constructorWins="@{constructorStandings}"
             app:layout_constraintBottom_toTopOf="@id/tv_constructor_detail_championships"
             app:layout_constraintHorizontal_bias="0"
@@ -65,7 +62,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_medium"
             app:constructorChampionships="@{constructorStandings}"
             app:layout_constraintBottom_toTopOf="@id/tv_constructor_detail_nationality"
             app:layout_constraintHorizontal_bias="0"
@@ -85,7 +82,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{constructor.nationality}"
-            android:textSize="@dimen/text_large"
+            android:textSize="@dimen/text_medium"
             app:layout_constraintBottom_toTopOf="@id/barrier_constructor_detail"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintLeft_toRightOf="@id/iv_constructor_detail_flag"

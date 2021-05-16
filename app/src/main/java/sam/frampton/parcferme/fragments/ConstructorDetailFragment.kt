@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.ConstructorDetailStandingAdapter
+import sam.frampton.parcferme.data.StandingType
 import sam.frampton.parcferme.databinding.FragmentConstructorDetailBinding
 import sam.frampton.parcferme.viewmodels.ConstructorDetailViewModel
 import sam.frampton.parcferme.viewmodels.MainActivityViewModel
@@ -40,11 +41,11 @@ class ConstructorDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        constructorAdapter = ConstructorDetailStandingAdapter {
+        constructorAdapter = ConstructorDetailStandingAdapter { standing ->
             val action = ConstructorDetailFragmentDirections
                 .actionConstructorDetailFragmentToStandingListFragment(
-                    StandingListFragment.StandingType.CONSTRUCTOR,
-                    it.season
+                    StandingType.CONSTRUCTOR,
+                    standing.season
                 )
             findNavController().navigate(action)
         }

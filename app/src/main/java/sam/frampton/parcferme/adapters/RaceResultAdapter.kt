@@ -26,25 +26,22 @@ class RaceResultAdapter(private val onClick: (RaceResult) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<RaceResult>() {
-        override fun areItemsTheSame(oldItem: RaceResult, newItem: RaceResult): Boolean {
-            return oldItem.position == newItem.position
-        }
+        override fun areItemsTheSame(oldItem: RaceResult, newItem: RaceResult): Boolean =
+            oldItem.position == newItem.position
 
-        override fun areContentsTheSame(oldItem: RaceResult, newItem: RaceResult): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: RaceResult, newItem: RaceResult): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemRaceResultBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            ListItemRaceResultBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        return ViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

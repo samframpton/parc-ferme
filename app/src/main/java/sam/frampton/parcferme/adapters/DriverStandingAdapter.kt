@@ -11,9 +11,7 @@ import sam.frampton.parcferme.databinding.ListItemDriverStandingBinding
 class DriverStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
     ListAdapter<DriverStanding, DriverStandingAdapter.ViewHolder>(DiffCallback) {
 
-    inner class ViewHolder(
-        private val binding: ListItemDriverStandingBinding
-    ) :
+    inner class ViewHolder(private val binding: ListItemDriverStandingBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var driverStanding: DriverStanding? = null
 
@@ -28,26 +26,22 @@ class DriverStandingAdapter(private val onClick: (DriverStanding) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<DriverStanding>() {
-        override fun areItemsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean {
-            return oldItem.driver.driverId == newItem.driver.driverId
-        }
+        override fun areItemsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean =
+            oldItem.driver.driverId == newItem.driver.driverId
 
-        override fun areContentsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             ListItemDriverStandingBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-        return ViewHolder(binding)
-    }
+        )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }
