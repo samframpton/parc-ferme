@@ -112,17 +112,17 @@ fun TextView.setBirthDate(birthDate: LocalDate) {
 }
 
 @BindingAdapter("driverChampionships")
-fun TextView.setDriverChampionships(driverStandings: List<DriverStanding>?) {
-    text = driverStandings?.count { it.position == 1 }?.let {
-        context.resources.getQuantityString(R.plurals.championships, it)
-    } ?: ""
+fun TextView.setDriverChampionships(driverStandings: List<DriverStanding>) {
+    text = driverStandings.count { it.position == 1 }.let {
+        context.resources.getQuantityString(R.plurals.championships, it, it)
+    }
 }
 
 @BindingAdapter("driverWins")
-fun TextView.setDriverWins(driverStandings: List<DriverStanding>?) {
-    text = driverStandings?.sumOf { it.wins }?.let {
+fun TextView.setDriverWins(driverStandings: List<DriverStanding>) {
+    text = driverStandings.sumOf { it.wins }.let {
         context.resources.getQuantityString(R.plurals.wins, it, it)
-    } ?: ""
+    }
 }
 
 @BindingAdapter("constructors")
@@ -131,17 +131,17 @@ fun TextView.setConstructors(constructors: List<Constructor>) {
 }
 
 @BindingAdapter("constructorChampionships")
-fun TextView.setConstructorChampionships(constructorStandings: List<ConstructorStanding>?) {
-    text = constructorStandings?.count { it.position == 1 }?.let {
-        context.resources.getQuantityString(R.plurals.championships, it)
-    } ?: ""
+fun TextView.setConstructorChampionships(constructorStandings: List<ConstructorStanding>) {
+    text = constructorStandings.count { it.position == 1 }.let {
+        context.resources.getQuantityString(R.plurals.championships, it, it)
+    }
 }
 
 @BindingAdapter("constructorWins")
-fun TextView.setConstructorWins(constructorStandings: List<ConstructorStanding>?) {
-    text = constructorStandings?.sumOf { it.wins }?.let {
+fun TextView.setConstructorWins(constructorStandings: List<ConstructorStanding>) {
+    text = constructorStandings.sumOf { it.wins }.let {
         context.resources.getQuantityString(R.plurals.wins, it, it)
-    } ?: ""
+    }
 }
 
 @BindingAdapter("position")

@@ -36,6 +36,7 @@ class DriverDetailFragment : Fragment() {
 
     private fun setDriver() {
         binding.driver = args.driver
+        binding.driverStandings = emptyList()
         driverDetailViewModel.setDriver(args.driver)
         driverDetailViewModel.refreshDriverStandings(false)
     }
@@ -59,11 +60,9 @@ class DriverDetailFragment : Fragment() {
 
     private fun setupObservers() {
         driverDetailViewModel.standingList.observe(viewLifecycleOwner) { standings ->
-            if (standings.isNotEmpty()) {
-                driverAdapter.submitList(standings)
-                binding.driverStandings = standings
-                binding.executePendingBindings()
-            }
+            driverAdapter.submitList(standings)
+            binding.driverStandings = standings
+            binding.executePendingBindings()
         }
         driverDetailViewModel.refreshResult.observe(viewLifecycleOwner) { refreshResult ->
             refreshResult?.let {
