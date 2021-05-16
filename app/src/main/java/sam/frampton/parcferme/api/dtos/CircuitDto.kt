@@ -6,11 +6,11 @@ data class CircuitDto(
     val circuitId: String,
     val circuitName: String,
     @SerializedName("Location")
-    val location: Location,
+    val location: LocationDto,
     val url: String?
 )
 
-data class Location(
+data class LocationDto(
     val locality: String,
     val country: String,
     val lat: Double,

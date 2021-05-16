@@ -26,25 +26,22 @@ class ConstructorAdapter(private val onClick: (Constructor) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<Constructor>() {
-        override fun areItemsTheSame(oldItem: Constructor, newItem: Constructor): Boolean {
-            return oldItem.constructorId == newItem.constructorId
-        }
+        override fun areItemsTheSame(oldItem: Constructor, newItem: Constructor): Boolean =
+            oldItem.constructorId == newItem.constructorId
 
-        override fun areContentsTheSame(oldItem: Constructor, newItem: Constructor): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Constructor, newItem: Constructor): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemConstructorBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            ListItemConstructorBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        return ViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

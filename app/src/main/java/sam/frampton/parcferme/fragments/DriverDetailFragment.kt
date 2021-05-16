@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sam.frampton.parcferme.adapters.DriverDetailStandingAdapter
+import sam.frampton.parcferme.data.StandingType
 import sam.frampton.parcferme.databinding.FragmentDriverDetailBinding
 import sam.frampton.parcferme.viewmodels.DriverDetailViewModel
 import sam.frampton.parcferme.viewmodels.MainActivityViewModel
@@ -40,11 +41,11 @@ class DriverDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        driverAdapter = DriverDetailStandingAdapter {
+        driverAdapter = DriverDetailStandingAdapter { standing ->
             val action =
                 DriverDetailFragmentDirections.actionDriverDetailFragmentToStandingListFragment(
-                    StandingListFragment.StandingType.DRIVER,
-                    it.season
+                    StandingType.DRIVER,
+                    standing.season
                 )
             findNavController().navigate(action)
         }

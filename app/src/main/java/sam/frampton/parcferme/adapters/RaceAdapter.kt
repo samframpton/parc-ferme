@@ -13,7 +13,7 @@ class RaceAdapter(private val onClick: (Race) -> Unit) :
 
     inner class ViewHolder(private val binding: ListItemRaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var race: Race? = null
+        private var race: Race? = null
 
         init {
             binding.root.setOnClickListener { race?.let { onClick(it) } }
@@ -26,25 +26,22 @@ class RaceAdapter(private val onClick: (Race) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<Race>() {
-        override fun areItemsTheSame(oldItem: Race, newItem: Race): Boolean {
-            return oldItem.round == newItem.round
-        }
+        override fun areItemsTheSame(oldItem: Race, newItem: Race): Boolean =
+            oldItem.round == newItem.round
 
-        override fun areContentsTheSame(oldItem: Race, newItem: Race): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Race, newItem: Race): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemRaceBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            ListItemRaceBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        return ViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

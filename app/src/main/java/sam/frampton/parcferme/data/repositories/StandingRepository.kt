@@ -29,7 +29,7 @@ class StandingRepository(val context: Context) {
             standings.toDriverStandingList().sortedBy { it.position }
         }
 
-    suspend fun refreshDriverStandingsBySeason(season: Int, force: Boolean = false): RefreshResult =
+    suspend fun refreshDriverStandingsBySeason(season: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val driverKey = context.getString(R.string.driver_standing_timestamp_key)
             if (!force && timestampManager.isCacheValid(driverKey, season.toString())) {
@@ -61,10 +61,7 @@ class StandingRepository(val context: Context) {
             standings.toDriverStandingList().sortedByDescending { it.season }
         }
 
-    suspend fun refreshDriverStandingsByDriver(
-        driverId: String,
-        force: Boolean = false
-    ): RefreshResult =
+    suspend fun refreshDriverStandingsByDriver(driverId: String, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val driverKey = context.getString(R.string.driver_standing_timestamp_key)
             if (!force && timestampManager.isCacheValid(driverKey, driverId)) {
@@ -114,10 +111,7 @@ class StandingRepository(val context: Context) {
             standings.toConstructorStandingList().sortedBy { it.position }
         }
 
-    suspend fun refreshConstructorStandingsBySeason(
-        season: Int,
-        force: Boolean = false
-    ): RefreshResult =
+    suspend fun refreshConstructorStandingsBySeason(season: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val constructorKey = context.getString(R.string.constructor_standing_timestamp_key)
             if (!force && timestampManager.isCacheValid(constructorKey, season.toString())) {
@@ -152,10 +146,8 @@ class StandingRepository(val context: Context) {
             standings.toConstructorStandingList().sortedByDescending { it.season }
         }
 
-    suspend fun refreshConstructorStandingsByConstructor(
-        constructorId: String,
-        force: Boolean = false
-    ): RefreshResult =
+    suspend fun refreshConstructorStandingsByConstructor(constructorId: String, force: Boolean):
+            RefreshResult =
         withContext(Dispatchers.IO) {
             val constructorKey = context.getString(R.string.constructor_standing_timestamp_key)
             if (!force && timestampManager.isCacheValid(constructorKey, constructorId)) {

@@ -12,15 +12,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import sam.frampton.parcferme.R
 import sam.frampton.parcferme.adapters.ConstructorStandingAdapter
 import sam.frampton.parcferme.adapters.DriverStandingAdapter
+import sam.frampton.parcferme.data.StandingType
+import sam.frampton.parcferme.data.StandingType.*
 import sam.frampton.parcferme.databinding.FragmentStandingListBinding
-import sam.frampton.parcferme.fragments.StandingListFragment.StandingType.*
 import sam.frampton.parcferme.viewmodels.MainActivityViewModel
 import sam.frampton.parcferme.viewmodels.SeasonViewModel
 import sam.frampton.parcferme.viewmodels.StandingListViewModel
 
 class StandingListFragment : Fragment() {
-
-    enum class StandingType { DRIVER, CONSTRUCTOR, DEFAULT }
 
     private val seasonViewModel: SeasonViewModel by activityViewModels()
     private val standingListViewModel: StandingListViewModel by activityViewModels()

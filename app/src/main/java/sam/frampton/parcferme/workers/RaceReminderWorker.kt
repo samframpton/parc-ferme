@@ -7,14 +7,10 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.navigation.NavArgument
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import sam.frampton.parcferme.R
-import sam.frampton.parcferme.fragments.RaceDetailFragmentArgs
-import sam.frampton.parcferme.fragments.RaceDetailFragmentDirections
-import sam.frampton.parcferme.fragments.RaceListFragmentArgs
 
 class RaceReminderWorker(val context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
@@ -47,7 +43,7 @@ class RaceReminderWorker(val context: Context, workerParams: WorkerParameters) :
                 .createPendingIntent()
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_race)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(inputData.getString(KEY_RACE_NAME))
             .setContentText(inputData.getString(KEY_RACE_TIME))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

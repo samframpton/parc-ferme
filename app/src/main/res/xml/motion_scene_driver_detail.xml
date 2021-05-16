@@ -39,8 +39,7 @@
     <ConstraintSet android:id="@+id/motion_scene_driver_detail_end">
         <Constraint
             android:id="@id/iv_driver_detail_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            style="@style/FlagIconMedium"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"

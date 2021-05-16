@@ -26,25 +26,22 @@ class DriverAdapter(private val onClick: (Driver) -> Unit) :
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<Driver>() {
-        override fun areItemsTheSame(oldItem: Driver, newItem: Driver): Boolean {
-            return oldItem.driverId == newItem.driverId
-        }
+        override fun areItemsTheSame(oldItem: Driver, newItem: Driver): Boolean =
+            oldItem.driverId == newItem.driverId
 
-        override fun areContentsTheSame(oldItem: Driver, newItem: Driver): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Driver, newItem: Driver): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ListItemDriverBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            ListItemDriverBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
-        return ViewHolder(binding)
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

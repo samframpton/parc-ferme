@@ -13,84 +13,75 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 private val countryFlags = mapOf(
-    "Australia" to R.drawable.ic_au,
-    "Austria" to R.drawable.ic_at,
-    "Azerbaijan" to R.drawable.ic_az,
-    "Bahrain" to R.drawable.ic_bh,
-    "Belgium" to R.drawable.ic_be,
-    "Brazil" to R.drawable.ic_br,
-    "Canada" to R.drawable.ic_ca,
-    "China" to R.drawable.ic_cn,
-    "France" to R.drawable.ic_fr,
-    "Germany" to R.drawable.ic_de,
-    "Hungary" to R.drawable.ic_hu,
-    "India" to R.drawable.ic_in,
-    "Italy" to R.drawable.ic_it,
-    "Japan" to R.drawable.ic_jp,
-    "Korea" to R.drawable.ic_kr,
-    "Malaysia" to R.drawable.ic_my,
-    "Mexico" to R.drawable.ic_mx,
-    "Monaco" to R.drawable.ic_mc,
-    "Netherlands" to R.drawable.ic_nl,
-    "Portugal" to R.drawable.ic_pt,
-    "Russia" to R.drawable.ic_ru,
-    "Saudi Arabia" to R.drawable.ic_sa,
-    "Singapore" to R.drawable.ic_sg,
-    "South Africa" to R.drawable.ic_za,
-    "Spain" to R.drawable.ic_es,
-    "Turkey" to R.drawable.ic_tr,
-    "UAE" to R.drawable.ic_ae,
-    "UK" to R.drawable.ic_gb,
-    "USA" to R.drawable.ic_us
-)
-
-private val nationalityFlags = mapOf(
     "American" to R.drawable.ic_us,
     "Argentine" to R.drawable.ic_ar,
+    "Australia" to R.drawable.ic_au,
     "Australian" to R.drawable.ic_au,
+    "Austria" to R.drawable.ic_at,
     "Austrian" to R.drawable.ic_at,
+    "Azerbaijan" to R.drawable.ic_az,
+    "Bahrain" to R.drawable.ic_bh,
     "Belgian" to R.drawable.ic_be,
+    "Belgium" to R.drawable.ic_be,
+    "Brazil" to R.drawable.ic_br,
     "Brazilian" to R.drawable.ic_br,
     "British" to R.drawable.ic_gb,
+    "Canada" to R.drawable.ic_ca,
     "Canadian" to R.drawable.ic_ca,
+    "China" to R.drawable.ic_cn,
     "Colombian" to R.drawable.ic_co,
     "Czech" to R.drawable.ic_cz,
     "Danish" to R.drawable.ic_dk,
     "Dutch" to R.drawable.ic_nl,
     "Finnish" to R.drawable.ic_fi,
+    "France" to R.drawable.ic_fr,
     "French" to R.drawable.ic_fr,
     "German" to R.drawable.ic_de,
+    "Germany" to R.drawable.ic_de,
     "Hungarian" to R.drawable.ic_hu,
+    "Hungary" to R.drawable.ic_hu,
+    "India" to R.drawable.ic_in,
     "Indian" to R.drawable.ic_in,
     "Indonesian" to R.drawable.ic_id,
     "Irish" to R.drawable.ic_ie,
     "Italian" to R.drawable.ic_it,
+    "Italy" to R.drawable.ic_it,
+    "Japan" to R.drawable.ic_jp,
     "Japanese" to R.drawable.ic_jp,
+    "Korea" to R.drawable.ic_kr,
+    "Malaysia" to R.drawable.ic_my,
     "Malaysian" to R.drawable.ic_my,
     "Mexican" to R.drawable.ic_mx,
+    "Mexico" to R.drawable.ic_mx,
+    "Monaco" to R.drawable.ic_mc,
     "Monegasque" to R.drawable.ic_mc,
+    "Netherlands" to R.drawable.ic_nl,
     "New Zealander" to R.drawable.ic_nz,
     "Polish" to R.drawable.ic_pl,
+    "Portugal" to R.drawable.ic_pt,
     "Portuguese" to R.drawable.ic_pt,
+    "Russia" to R.drawable.ic_ru,
     "Russian" to R.drawable.ic_ru,
+    "Saudi Arabia" to R.drawable.ic_sa,
+    "Singapore" to R.drawable.ic_sg,
+    "South Africa" to R.drawable.ic_za,
     "South African" to R.drawable.ic_za,
+    "Spain" to R.drawable.ic_es,
     "Spanish" to R.drawable.ic_es,
     "Swedish" to R.drawable.ic_se,
     "Swiss" to R.drawable.ic_ch,
     "Thai" to R.drawable.ic_th,
+    "Turkey" to R.drawable.ic_tr,
+    "UAE" to R.drawable.ic_ae,
+    "UK" to R.drawable.ic_gb,
+    "USA" to R.drawable.ic_us,
     "Venezuelan" to R.drawable.ic_ve
 )
 
-@BindingAdapter("country")
-fun ImageView.setCountry(country: String) {
+@BindingAdapter("countryFlag")
+fun ImageView.setCountryFlag(country: String) {
     setImageResource(countryFlags[country] ?: R.drawable.ic_default_flag)
     contentDescription = country
-}
-
-@BindingAdapter("nationality")
-fun ImageView.setNationality(nationality: String) {
-    setImageResource(nationalityFlags[nationality] ?: R.drawable.ic_default_flag)
-    contentDescription = nationality
 }
 
 @BindingAdapter("season")
@@ -123,7 +114,7 @@ fun TextView.setBirthDate(birthDate: LocalDate) {
 @BindingAdapter("driverChampionships")
 fun TextView.setDriverChampionships(driverStandings: List<DriverStanding>?) {
     text = driverStandings?.count { it.position == 1 }?.let {
-        context.getString(R.string.championships, it)
+        context.resources.getQuantityString(R.plurals.championships, it)
     } ?: ""
 }
 
@@ -142,7 +133,7 @@ fun TextView.setConstructors(constructors: List<Constructor>) {
 @BindingAdapter("constructorChampionships")
 fun TextView.setConstructorChampionships(constructorStandings: List<ConstructorStanding>?) {
     text = constructorStandings?.count { it.position == 1 }?.let {
-        context.getString(R.string.championships, it)
+        context.resources.getQuantityString(R.plurals.championships, it)
     } ?: ""
 }
 
@@ -235,9 +226,8 @@ fun TextView.setQualifyingTime(qualifyingResult: QualifyingResult) {
     }
 }
 
-private fun measureText(textView: TextView, text: String): Int {
-    return TextPaint().let {
+private fun measureText(textView: TextView, text: String): Int =
+    TextPaint().let {
         it.textSize = textView.textSize
         it.measureText(text)
     }.toInt()
-}

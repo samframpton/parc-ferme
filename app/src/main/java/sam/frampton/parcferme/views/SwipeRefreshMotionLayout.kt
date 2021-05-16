@@ -10,6 +10,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 /**
  * The current version of MotionLayout (2.0.4) does not honor the position  of the RecyclerView,
  * if it is wrapped in a SwipeRefreshLayout.
+ *
  * This is the case for the PullRequest screen: When scrolling back to top, the motionLayout
  * transition would be triggered immediately instead of only as soon as the RecyclerView scrolled
  * back to top.

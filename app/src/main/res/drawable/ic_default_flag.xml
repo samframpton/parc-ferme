@@ -1,6 +1,12 @@
-<vector android:height="152dp" android:viewportHeight="480"
-    android:viewportWidth="640" android:width="202dp" xmlns:android="http://schemas.android.com/apk/res/android">
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="640"
+    android:viewportHeight="480">
     <group>
-        <path android:fillColor="#fff" android:fillType="evenOdd" android:pathData="M-40,0l720,0l0,480l-720,0z"/>
+        <path
+            android:fillColor="#fff"
+            android:fillType="evenOdd"
+            android:pathData="M-40,0l720,0l0,480l-720,0z" />
     </group>
 </vector>

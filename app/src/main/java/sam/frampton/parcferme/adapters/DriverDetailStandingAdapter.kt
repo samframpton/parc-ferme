@@ -13,7 +13,7 @@ class DriverDetailStandingAdapter(private val onClick: (DriverStanding) -> Unit)
 
     inner class ViewHolder(private val binding: ListItemDriverDetailStandingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var driverStanding: DriverStanding? = null
+        private var driverStanding: DriverStanding? = null
 
         init {
             binding.root.setOnClickListener { driverStanding?.let { onClick(it) } }
@@ -26,26 +26,22 @@ class DriverDetailStandingAdapter(private val onClick: (DriverStanding) -> Unit)
     }
 
     private object DiffCallback : DiffUtil.ItemCallback<DriverStanding>() {
-        override fun areItemsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean {
-            return oldItem.season == newItem.season
-        }
+        override fun areItemsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean =
+            oldItem.season == newItem.season
 
-        override fun areContentsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: DriverStanding, newItem: DriverStanding): Boolean =
+            oldItem == newItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             ListItemDriverDetailStandingBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-        return ViewHolder(binding)
-    }
+        )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 }

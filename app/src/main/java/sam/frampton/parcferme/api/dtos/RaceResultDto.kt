@@ -15,26 +15,26 @@ data class RaceResultDto(
     val laps: Int,
     val status: String,
     @SerializedName("Time")
-    val time: Time?,
+    val time: TimeDto?,
     @SerializedName("FastestLap")
-    val fastestLap: FastestLap?
+    val fastestLap: FastestLapDto?
 )
 
-data class Time(
+data class TimeDto(
     val time: String,
     val millis: Int?
 )
 
-data class FastestLap(
+data class FastestLapDto(
     val rank: Int,
     val lap: Int,
     @SerializedName("Time")
-    val time: Time,
+    val time: TimeDto,
     @SerializedName("AverageSpeed")
-    val averageSpeed: AverageSpeed
+    val averageSpeed: AverageSpeedDto
 )
 
-data class AverageSpeed(
+data class AverageSpeedDto(
     val units: String,
     val speed: Double
 )

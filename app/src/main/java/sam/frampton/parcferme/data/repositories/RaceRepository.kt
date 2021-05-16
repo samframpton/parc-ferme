@@ -27,7 +27,7 @@ class RaceRepository(val context: Context) {
             races.toRaceList().sortedBy { it.date }
         }
 
-    suspend fun refreshRaces(season: Int, force: Boolean = false): RefreshResult =
+    suspend fun refreshRaces(season: Int, force: Boolean): RefreshResult =
         withContext(Dispatchers.IO) {
             val raceKey = context.getString(R.string.race_timestamp_key)
             if (!force && timestampManager.isCacheValid(raceKey, season.toString())) {
