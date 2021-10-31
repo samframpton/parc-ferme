@@ -60,6 +60,7 @@ private val countryFlags = mapOf(
     "Polish" to R.drawable.ic_pl,
     "Portugal" to R.drawable.ic_pt,
     "Portuguese" to R.drawable.ic_pt,
+    "Rhodesian" to R.drawable.ic_zw,
     "Russia" to R.drawable.ic_ru,
     "Russian" to R.drawable.ic_ru,
     "Saudi Arabia" to R.drawable.ic_sa,
